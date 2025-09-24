@@ -39,7 +39,7 @@ public class InitiatingGatewayController : ControllerBase
         switch (action)
         {
             case Constants.Xds.OperationContract.Iti38Action:
-                foreach (var targetCommunity in _targetCommunitiesService.Domains)
+                foreach (var targetCommunity in _targetCommunitiesService.DomainConfig)
                 {
 
                 }

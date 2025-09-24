@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XcaInteropService.WebServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XcaInteropService.Commons", "XcaInteropService.Commons\XcaInteropService.Commons.csproj", "{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XcaInteropService.Source", "XcaInteropService.Source\XcaInteropService.Source.csproj", "{F5186902-0B56-4A22-A3E8-90555BF92955}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589} = {1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,8 +29,15 @@ Global
 		{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5186902-0B56-4A22-A3E8-90555BF92955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5186902-0B56-4A22-A3E8-90555BF92955}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5186902-0B56-4A22-A3E8-90555BF92955}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5186902-0B56-4A22-A3E8-90555BF92955}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41CB012F-D40D-4A30-9C4B-6A8494BCB0E5}
 	EndGlobalSection
 EndGlobal
