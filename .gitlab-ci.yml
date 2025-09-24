@@ -1,0 +1,49 @@
+include:
+  - project: helsepersonell/team-plattform/nhn-ci-template
+    file: .gitlab-ci.yml
+    ref: "0.12.1"
+
+variables:
+  IMAGE_NAME: xcainteropservice
+  HARBOR_REPOSITORY: team-dokumentdeling
+  HARBOR_IMAGE_REPOSITORY: $IMAGE_NAME
+
+build image and push to harbor:
+  variables:
+    SRC_FOLDER: "XcaInteropService.WebService"
+    CONTEXT_FOLDER: "."
+    NHN_DEFAULT_FILTER_EXTRA_PATH: ".gitlab-ci.yml"
+    DOCKERFILE: "Dockerfile.backend"
+  extends:
+    - .nhn-image-build-and-push-harbor
+
+
+# build frontend image and push to harbor:
+#   extends:
+#     - build image and push to harbor
+#   variables:
+#     DOCKERFILE: "Dockerfile.frontend"
+#     SRC_FOLDER: "XcaXds.Frontend"
+
+# scan-image:
+#   extends: 
+#     - .nhn-image-scan-artifact
+
+tag manifest:
+  extends:
+    - .manifest-repo-update-singlefile
+  variables:
+    MANIFEST_REPO_URL: "milliways.nhn.no/helsepersonell/team-dokumentdeling/xcais/xcainteropservice.git"
+    SRC_FOLDER: "."
+    DEPLOY_ENVIRONMENTS: "test"
+    GITLAB_USER: gitlab-user
+    GITLAB_TOKEN: $GITLAB_TOKEN
+    NHN_DEFAULT_FILTER_EXTRA_PATH: ".gitlab-ci.yml"
+
+tag manifest prod:
+  extends:
+    - tag manifest
+  variables:
+    DEPLOY_ENVIRONMENTS: "prod"
+  when: manual
+
