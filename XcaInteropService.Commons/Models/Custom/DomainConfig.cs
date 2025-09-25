@@ -4,11 +4,12 @@ namespace XcaInteropService.Commons.Models.Custom;
 
 public class DomainConfig
 {
+    public string? DisplayName { get; set; }
     public string DomainOid { get; set; }
-    public bool Async { get; set; }
-    public bool Enabled { get; set; }
-    public PatientResolverType PatientResolverType { get; set; }
+    public bool Async { get; set; } = false;
+    public bool Enabled { get; set; } = true;
+    public PatientResolverType PatientResolverType { get; set; } = PatientResolverType.IDENTITY;
     public string QueryUrl { get; set; }
-    public string RetrieveUrl { get; set; }
-    public string RetrieveImagesUrl { get; set; }
+    public string? RetrieveUrl { get; set; }
+    public string? RetrieveImagesUrl { get; set; }
 }

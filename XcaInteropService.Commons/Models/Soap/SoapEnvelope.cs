@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Xml;
+using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.Soap.Actions;
 using XcaInteropService.Commons.Models.Soap.XdsTypes;
@@ -159,8 +160,8 @@ public class Security
     [XmlElement(Namespace = Constants.Soap.Namespaces.SecurityUtility)]
     public SoapTimestamp? Timestamp { get; set; }
 
-    [XmlElement(Namespace = Constants.Soap.Namespaces.Saml2)]
-    public Assertion? Assertion { get; set; }
+    [XmlAnyElement(Namespace = Constants.Soap.Namespaces.Saml2)]
+    public XmlElement? Assertion { get; set; }
 }
 
 [Serializable]

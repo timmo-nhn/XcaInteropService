@@ -130,7 +130,7 @@ public class SoapXmlSerializer
             {
                 return new SoapXmlSerializerResult()
                 {
-                    Content = $"<SoapFault><Reason>Serialization Failed {ex.Message}</Reason></SoapFault>",
+                    Content = $"<SoapFault><Reason>Serialization Failed {ex.ToString()}</Reason></SoapFault>",
                     IsSuccess = false
                 };
             }

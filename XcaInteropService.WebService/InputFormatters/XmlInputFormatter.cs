@@ -32,6 +32,7 @@ public class SoapEnvelopeModelBinder : IModelBinder
         var request = bindingContext.HttpContext.Request;
         var response = bindingContext.HttpContext.Response;
 
+
         if (request.ContentType != null && !(request.ContentType.Contains(Constants.MimeTypes.SoapXml) || request.ContentType.Contains(Constants.MimeTypes.XopXml) || request.ContentType.Contains(Constants.MimeTypes.MultipartRelated)))
         {
             await CreateStatus500SoapError("InvalidContentType", "The request content type is not XML.", response);
@@ -61,7 +62,7 @@ public class SoapEnvelopeModelBinder : IModelBinder
             {
                 using (var sr = new StreamReader(xmlContent))
                 {
-                    xmlString = sr.ReadToEnd();
+                    xmlString = await sr.ReadToEndAsync();
                 }
             }
 

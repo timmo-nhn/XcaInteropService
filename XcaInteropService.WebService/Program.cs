@@ -1,4 +1,7 @@
 using XcaInteropService.Commons.Models.Custom;
+using XcaInteropService.Source.Services;
+using XcaInteropService.WebService.Middleware;
+using XcaInteropService.WebService.Services;
 
 namespace XcaInteropService.WebService;
 
@@ -20,6 +23,10 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddSingleton<TargetCommunitiesService>();
+        builder.Services.AddSingleton<TargetCommunitiesWrapper>();
+        builder.Services.AddSingleton<InitiatingGatewayService>();
+
+        builder.Services.AddHttpClient();
 
         var app = builder.Build();
 
@@ -29,6 +36,8 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseMiddleware<SessionIdTraceMiddleware>();
 
         app.UseHttpsRedirection();
 
