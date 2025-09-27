@@ -1,6 +1,10 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Net;
+using System.Text;
 using XcaInteropService.Commons.Commons;
+using XcaInteropService.Commons.Extensions;
 using XcaInteropService.Commons.Models.Custom;
 using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Serializers;
@@ -36,6 +40,8 @@ public class InitiatingGatewayController : ControllerBase
         var requestTimer = Stopwatch.StartNew();
         _logger.LogInformation($"{Request.HttpContext.TraceIdentifier} - Received request for action: {action} from {Request.HttpContext.Connection.RemoteIpAddress}");
 
+        var domainConfigMap = _targetCommunitiesService.GetDomainConfigMap();
+
         if (soapEnvelope.Header.ReplyTo?.Address != Constants.Soap.Addresses.Anonymous)
         {
             action += "Async";
@@ -44,8 +50,6 @@ public class InitiatingGatewayController : ControllerBase
         switch (action)
         {
             case Constants.Xds.OperationContract.Iti38Action:
-
-                var domainConfigMap = _targetCommunitiesService.GetDomainConfigMap();
 
                 var runningTasks = new List<Task<HttpResponseMessage>>();
 
@@ -56,47 +60,42 @@ public class InitiatingGatewayController : ControllerBase
                     runningTasks.Add(_initiatingGatewayService.CrossGatewayQueryFromTargetCommunity(soapEnvelope, targetCommunity));
                 }
 
-                HttpResponseMessage[] results = await Task.WhenAll(runningTasks);
+                var results = await Task.WhenAll(runningTasks);
 
-                foreach (var response in results)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _logger.LogInformation($"{Request.HttpContext.TraceIdentifier} - Got success from {response.RequestMessage?.RequestUri}");
-                        var responseBody = await response.Content.ReadAsStringAsync();
-                        var communitySoapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(responseBody);
-                        var registryObjects = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryObjectList;
-                        var registryErrors = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryErrorList?.RegistryError;
-                        
-                        _logger.LogInformation($"{Request.HttpContext.TraceIdentifier} - Retrieved {registryObjects?.Length ?? 0} Registry objects");
-
-                        if (registryObjects == null || registryObjects?.Length == 0) continue;
-
-                        responseEnvelope.Body ??= new();
-                        responseEnvelope.Body.AdhocQueryResponse ??= new();
-                        responseEnvelope.Body.AdhocQueryResponse.RegistryErrorList ??= new();
-
-                        if (registryObjects != null && registryObjects.Length != 0)
-                        {
-                            responseEnvelope.Body.AdhocQueryResponse.RegistryObjectList = [.. registryObjects];
-                        }
-
-                        if (registryErrors != null && registryErrors?.Length != 0)
-                        {
-                            responseEnvelope.Body.AdhocQueryResponse.RegistryErrorList.RegistryError = [.. registryErrors];
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogWarning($"{Request.HttpContext.TraceIdentifier} - Gateway {response.RequestMessage?.RequestUri} failed with status {response.StatusCode}");
-                    }
-                }
+                responseEnvelope = await _initiatingGatewayService.ProcessCrossGatewayQueryResponseMessages(results, Request.HttpContext.TraceIdentifier, domainConfigMap);
 
                 break;
 
 
             case Constants.Xds.OperationContract.Iti39Action:
-                break;
+                responseEnvelope = await _initiatingGatewayService.CrossGatewayRetrieveFromTargetCommunity(soapEnvelope, Request.HttpContext.TraceIdentifier, domainConfigMap);
+
+                var multipartResponse = HttpRequestResponseExtensions.ConvertToMultipartMessage(responseEnvelope, out var boundary);
+
+                string contentId = null;
+
+                if (multipartResponse.FirstOrDefault()?.Headers.TryGetValues("Content-ID", out var contentIdValues) ?? false)
+                {
+                    contentId = contentIdValues.First();
+                }
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = multipartResponse
+                };
+
+                requestTimer.Stop();
+                _logger.LogInformation($"Completed action: {action} in {requestTimer.ElapsedMilliseconds} ms");
+
+                var bytes = await responseMessage.Content.ReadAsByteArrayAsync();
+
+                var streamResult = new FileContentResult(bytes, $"multipart/related; type=\"{Constants.MimeTypes.XopXml}\"; boundary=\"{boundary}\"; start=\"{contentId}\"; start-info=\"{Constants.MimeTypes.SoapXml}\"");
+
+                _logger.LogInformation($"{soapEnvelope.Header.MessageId} - " + streamResult.ContentType);
+
+                _logger.LogInformation($"{soapEnvelope.Header.MessageId} - " + Encoding.UTF8.GetString(bytes));
+
+                return streamResult;
 
             default:
                 break;

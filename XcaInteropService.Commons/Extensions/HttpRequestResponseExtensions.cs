@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System.Buffers.Text;
+using System.IO;
 using System.Text;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.Soap;
@@ -20,16 +21,116 @@ public static class HttpRequestResponseExtensions
         return bodyContent;
     }
 
-    public static async Task<string> ReadMultipartContentFromRequest(HttpContext httpContext)
+    public static async Task<string> ReadFirstMultiPartFromRequest(HttpResponseMessage responseMessage)
     {
         var sb = new StringBuilder();
 
+        if (responseMessage.Content?.Headers.ContentType == null)
+            return string.Empty;
+
+        var mediaType = responseMessage.Content.Headers.ContentType;
+        if (!mediaType.MediaType.Equals("multipart/related", StringComparison.OrdinalIgnoreCase) &&
+            !mediaType.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+        {
+            return await responseMessage.Content.ReadAsStringAsync();
+        }
+
+        var boundary = HeaderUtilities.RemoveQuotes(mediaType.Parameters.FirstOrDefault(p => p.Name.Equals("boundary", StringComparison.OrdinalIgnoreCase))?.Value).Value;
+        if (string.IsNullOrWhiteSpace(boundary))
+            throw new InvalidOperationException("Multipart boundary not found in Content-Type header.");
+
+        var content = await responseMessage.Content.ReadAsByteArrayAsync();
+        var stream = new MemoryStream(content);
+
+        var reader = new MultipartReader(boundary, stream);
+
+        var section = await reader.ReadNextSectionAsync();
+
+        using var sr = new StreamReader(section.Body);
+        sb.Append(await sr.ReadToEndAsync());
+
+        return sb.ToString();
+
+    }
+
+    public static async Task<string> ReadLastMultipartFromRequest(HttpResponseMessage responseMessage)
+    {
+        if (responseMessage.Content?.Headers.ContentType == null)
+            return string.Empty;
+
+        var mediaType = responseMessage.Content.Headers.ContentType;
+        if (!mediaType.MediaType.Equals("multipart/related", StringComparison.OrdinalIgnoreCase) &&
+            !mediaType.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+        {
+            return await responseMessage.Content.ReadAsStringAsync();
+        }
+
+        var boundary = HeaderUtilities.RemoveQuotes(mediaType.Parameters.FirstOrDefault(p => p.Name.Equals("boundary", StringComparison.OrdinalIgnoreCase))?.Value).Value;
+        if (string.IsNullOrWhiteSpace(boundary))
+            throw new InvalidOperationException("Multipart boundary not found in Content-Type header.");
+
+
+        var content = await responseMessage.Content.ReadAsByteArrayAsync();
+        var stream = new MemoryStream(content);
+
+        var reader = new MultipartReader(boundary, stream);
+
+        var sections = new List<string>();
+
+        MultipartSection? section;
+        while ((section = await reader.ReadNextSectionAsync()) != null)
+        {
+            using var sr = new StreamReader(section.Body);
+            sections.Add(await sr.ReadToEndAsync());
+        }
+
+        return sections.LastOrDefault();
+    }
+
+
+    public static async Task<string> ReadMultipartContentFromRequest(HttpResponseMessage responseMessage)
+    {
+        var sb = new StringBuilder();
+
+        if (responseMessage.Content?.Headers.ContentType == null)
+            return string.Empty;
+
+        var mediaType = responseMessage.Content.Headers.ContentType;
+        if (!mediaType.MediaType.Equals("multipart/related", StringComparison.OrdinalIgnoreCase) &&
+            !mediaType.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+        {
+            return await responseMessage.Content.ReadAsStringAsync();
+        }
+
+        var boundary = HeaderUtilities.RemoveQuotes(mediaType.Parameters.FirstOrDefault(p => p.Name.Equals("boundary", StringComparison.OrdinalIgnoreCase))?.Value).Value;
+        if (string.IsNullOrWhiteSpace(boundary))
+            throw new InvalidOperationException("Multipart boundary not found in Content-Type header.");
+
+        var content = await responseMessage.Content.ReadAsByteArrayAsync();
+        var stream = new MemoryStream(content);
+
+        var reader = new MultipartReader(boundary, stream);
+
+        MultipartSection? section;
+        while ((section = await reader.ReadNextSectionAsync()) != null)
+        {
+            using var sr = new StreamReader(section.Body);
+            sb.Append(await sr.ReadToEndAsync());
+        }
+
+        return sb.ToString();
+    }
+
+    public static async Task<string> ReadMultipartContentFromRequest(HttpContext httpContext)
+    {
+        var sb = new StringBuilder();
         if (!MediaTypeHeaderValue.TryParse(httpContext.Request.ContentType, out MediaTypeHeaderValue? mediaTypeHeaderValue)
         || !mediaTypeHeaderValue.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
         {
             var boundary = GetBoundary(mediaTypeHeaderValue, 512);
 
             var multipartReader = new MultipartReader(boundary, httpContext.Request.Body);
+
             while (await multipartReader.ReadNextSectionAsync() is { } section)
             {
                 using (var sr = new StreamReader(section.Body))
@@ -58,7 +159,7 @@ public static class HttpRequestResponseExtensions
     }
 
 
-    public static MultipartContent ConvertToMultipartResponse(SoapEnvelope soapEnvelope, out string boundary)
+    public static MultipartContent ConvertToMultipartMessage(SoapEnvelope soapEnvelope, out string boundary)
     {
         var documentResponses = soapEnvelope.Body.RetrieveDocumentSetResponse?.DocumentResponse;
         var sxmls = new SoapXmlSerializer(Constants.XmlDefaultOptions.DefaultXmlWriterSettingsInline);
@@ -121,9 +222,5 @@ public static class HttpRequestResponseExtensions
         multipart.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Constants.MimeTypes.MultipartRelated, Encoding.UTF8.BodyName);
 
         return multipart;
-    }
-
-    public static void SendAsyncResponse(string replyTo, SoapEnvelope responseEnvelope)
-    {
     }
 }

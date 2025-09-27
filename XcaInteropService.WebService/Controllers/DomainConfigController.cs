@@ -16,8 +16,21 @@ public class DomainConfigController : Controller
         _targetCommunitiesService = targetCommunitiesService;
     }
 
+    [HttpGet("get-domain-config")]
+    public IActionResult GetDomainConfig(string oid)
+    {
+        var domain = _targetCommunitiesService.GetDomainConfigMap().Domains.FirstOrDefault(domain => domain.DomainOid == oid);
+        return Ok(domain);
+    }
+
+    [HttpGet("get-domain-config-map")]
+    public IActionResult GetDomainConfigMap()
+    {
+        return Ok(_targetCommunitiesService.GetDomainConfigMap());
+    }
+
     [HttpPost("add-domain-config")]
-    public ActionResult AddDomainConfig([FromBody] DomainConfig domainConfig)
+    public IActionResult AddDomainConfig([FromBody] DomainConfig domainConfig)
     {
         var response = new RestfulApiResponse();
 
@@ -46,7 +59,7 @@ public class DomainConfigController : Controller
     }
 
     [HttpGet("toggle-domain")]
-    public ActionResult ToggleDomain(string oid)
+    public IActionResult ToggleDomain(string oid)
     {
         var result = _targetCommunitiesService.ToggleDomain(oid, out var currentValue);
 
@@ -66,7 +79,7 @@ public class DomainConfigController : Controller
     }
 
     [HttpDelete("delete-domain")]
-    public ActionResult DeleteDomain(string oid)
+    public IActionResult DeleteDomain(string oid)
     {
         var result = _targetCommunitiesService.RemoveDomainConfig(oid);
 

@@ -1,9 +1,9 @@
 Domains:
 - DisplayName: XcaDS Test
-  DomainOid: 2.16.578.1.12.4.1.2.4.7.1.1
+  DomainOid: 2.16.578.1.12.4.5.100.1
   Async: false
   Enabled: true
   PatientResolverType: IDENTITY
   QueryUrl: https://localhost:7176/XCA/services/RespondingGatewayService
-  RetrieveUrl: https://localhost:7176/XCA/services/RespondingGatewayService
+  RetrieveUrl:
   RetrieveImagesUrl: 

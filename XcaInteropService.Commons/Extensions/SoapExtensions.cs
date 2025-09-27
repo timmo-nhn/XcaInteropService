@@ -7,11 +7,6 @@ namespace XcaInteropService.Commons.Extensions;
 
 public static class SoapExtensions
 {
-    public static object? CreateAsyncAcceptedMessage(SoapEnvelope soapEnvelope)
-    {
-        throw new NotImplementedException();
-    }
-
     public static SoapRequestResult<SoapEnvelope> CreateSoapFault(string faultCode, string? subCode = null, string? detail = null, string? faultReason = null)
     {
         var resultEnvelope = new SoapRequestResult<SoapEnvelope>()
@@ -44,100 +39,6 @@ public static class SoapExtensions
         return resultEnvelope;
     }
 
-    public static SoapRequestResult<SoapEnvelope> CreateSoapResultRegistryResponse(RegistryResponseType message)
-    {
-        var resultEnvelope = new SoapRequestResult<SoapEnvelope>()
-        {
-            Value = new SoapEnvelope()
-            {
-                Header = new(),
-                Body = new()
-                {
-                    RegistryResponse = message
-                }
-            }
-        };
-        if (resultEnvelope.Value.Body.RegistryResponse is not null)
-        {
-            // Base Success property on whether Value...RegistryErrorList has any errors
-            if (resultEnvelope.Value.Body.RegistryResponse.RegistryErrorList is null)
-            {
-                resultEnvelope.IsSuccess = true;
-            }
-            else
-            {
-                var isSuccess = bool.Equals(false, resultEnvelope.Value.Body.RegistryResponse.RegistryErrorList.RegistryError
-                .Any(re => re.Severity == Constants.Xds.ErrorSeverity.Error));
-                resultEnvelope.Value.Header.Action = isSuccess is true ? Constants.Soap.Namespaces.Addressing : Constants.Soap.Namespaces.AddressingSoapFault;
-                resultEnvelope.IsSuccess = isSuccess;
-            }
-        }
-
-        return resultEnvelope;
-    }
-
-    public static SoapRequestResult<SoapEnvelope> CreateSoapResultResponse(SoapEnvelope message)
-    {
-        var resultEnvelope = new SoapRequestResult<SoapEnvelope>()
-        {
-            Value = new SoapEnvelope()
-            {
-                Header = message.Header,
-                Body = message.Body
-            }
-        };
-        resultEnvelope.Value.Header.Action = message.Header.Action;
-        resultEnvelope.Value.Header.RelatesTo = message.Header.MessageId;
-
-
-        if (resultEnvelope.Value.Body.RegistryResponse is not null)
-        {
-            // Base Success property on whether Value...RegistryErrorList has any errors
-            if (resultEnvelope.Value.Body.RegistryResponse.RegistryErrorList is null)
-            {
-                resultEnvelope.IsSuccess = true;
-            }
-            else
-            {
-                var isSuccess = bool.Equals(false, resultEnvelope.Value.Body.RegistryResponse.RegistryErrorList.RegistryError
-                .Any(re => re.Severity == Constants.Xds.ErrorSeverity.Error));
-                resultEnvelope.Value.Header.Action = isSuccess is true ? Constants.Soap.Namespaces.Addressing : Constants.Soap.Namespaces.AddressingSoapFault;
-                resultEnvelope.IsSuccess = isSuccess;
-            }
-        }
-
-        return resultEnvelope;
-    }
-
-    //public static SoapEnvelope CreateSoapTypedResponse<T>(SoapEnvelope message) where T: class
-    //{
-    //    var resultEnvelope = new SoapEnvelope()
-    //    {
-    //        Header = new()
-    //        {
-    //            Action = Constants.Soap.Namespaces.Addressing,
-    //        },
-    //        Body = new SoapBody()
-    //    };
-
-    //    // Get property of SoapBody which matches T
-    //    var propertyInfo = typeof(SoapBody).GetProperties()
-    //        .FirstOrDefault(p => p.PropertyType == typeof(T));
-
-    //    if (propertyInfo != null && propertyInfo.CanWrite)
-    //    {
-    //        var bodyProperty = message.Body.GetType().GetProperty(propertyInfo.Name);
-
-    //        if (bodyProperty != null)
-    //        {
-    //            var value = bodyProperty.GetValue(message.Body);
-
-    //            propertyInfo.SetValue(resultEnvelope.Body, value);
-    //        }
-    //    }
-
-    //    return resultEnvelope;
-    //}
 
     public static T DeepClone<T>(T obj)
     {
@@ -162,6 +63,26 @@ public static class SoapExtensions
         }
     }
 
+    public static string GetHighestSeverityErrorFromSoapEnvelope(SoapEnvelope soapEnvelope)
+    {
+        var errorList = soapEnvelope.Body.RegistryResponse?.RegistryErrorList?.RegistryError;
+        if (errorList == null || errorList.Length == 0)
+        {
+            return null;
+        }
+
+        if (errorList.Any(e => e.Severity.Contains("Error")))
+        {
+            return Constants.Xds.ErrorSeverity.Error;
+        }
+        else if (errorList.Any(e => e.Severity.Contains("Warning")))
+        {
+            return Constants.Xds.ErrorSeverity.Warning;
+        }
+
+        return Constants.Xds.ErrorSeverity.Warning;
+    }
+
     public static SoapHeader GetResponseHeaderFromRequest(SoapEnvelope envelope)
     {
         return new SoapHeader()
@@ -169,6 +90,7 @@ public static class SoapExtensions
             Action = envelope.GetCorrespondingResponseAction(),
         };
     }
+
 
     public static void PutRegistryResponseInTheCorrectPlaceAccordingToSoapAction(SoapEnvelope soapEnvelopeResponse, RegistryResponseType registryResponse)
     {

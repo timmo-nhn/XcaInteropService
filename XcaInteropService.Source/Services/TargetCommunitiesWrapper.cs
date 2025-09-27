@@ -19,6 +19,16 @@ public class TargetCommunitiesWrapper
         EnsureDomainConfigFileExists();
     }
 
+    public string GetDomainConfigPath()
+    {
+        return _domainConfigPath;
+    }
+
+    public string GetDomainConfigFile()
+    {
+        return _domainConfigFile;
+    }
+
     public DomainConfigMap ReadDomainConfigMap()
     {
         lock (_lock)
@@ -27,6 +37,8 @@ public class TargetCommunitiesWrapper
 
             var deserializer = new Deserializer();
             var domainConfigMap = deserializer.Deserialize<DomainConfigMap>(content);
+
+            domainConfigMap.Domains.ForEach(domain => domain.RetrieveUrl ??= domain.QueryUrl);
 
             return domainConfigMap;
         }

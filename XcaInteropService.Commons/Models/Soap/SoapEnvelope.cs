@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.Soap.Actions;
 using XcaInteropService.Commons.Models.Soap.XdsTypes;
+using XcaInteropService.Commons.Serializers;
 
 namespace XcaInteropService.Commons.Models.Soap;
 
@@ -62,6 +63,17 @@ public class SoapEnvelope
             Constants.Xds.OperationContract.Iti86Reply => Constants.Xds.OperationContract.Iti86Action,
             _ => string.Empty
         };
+    }
+
+    public SoapEnvelope? DeepCopy()
+    {
+        var sxmls = new SoapXmlSerializer();
+        var soapSerializeResult = sxmls.SerializeSoapMessageToXmlString(this);
+        if (soapSerializeResult.Content != null && soapSerializeResult.IsSuccess)
+        {
+            return sxmls.DeserializeSoapMessage<SoapEnvelope>(soapSerializeResult.Content);
+        }
+        return null;
     }
 }
 
