@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Net;
 using System.Text;
 using XcaInteropService.Commons.Commons;
@@ -37,6 +36,8 @@ public class InitiatingGatewayController : ControllerBase
         var sxmls = new SoapXmlSerializer();
 
         var responseEnvelope = new SoapEnvelope();
+        responseEnvelope.Body = new();
+
         var requestTimer = Stopwatch.StartNew();
         _logger.LogInformation($"{Request.HttpContext.TraceIdentifier} - Received request for action: {action} from {Request.HttpContext.Connection.RemoteIpAddress}");
 
@@ -70,6 +71,9 @@ public class InitiatingGatewayController : ControllerBase
             case Constants.Xds.OperationContract.Iti39Action:
                 responseEnvelope = await _initiatingGatewayService.CrossGatewayRetrieveFromTargetCommunity(soapEnvelope, Request.HttpContext.TraceIdentifier, domainConfigMap);
 
+                responseEnvelope.Header = new();
+                responseEnvelope.Header.Action = soapEnvelope.GetCorrespondingResponseAction();
+
                 var multipartResponse = HttpRequestResponseExtensions.ConvertToMultipartMessage(responseEnvelope, out var boundary);
 
                 string contentId = null;
@@ -100,6 +104,8 @@ public class InitiatingGatewayController : ControllerBase
             default:
                 break;
         }
+        responseEnvelope.Header = new();
+        responseEnvelope.Header.Action = soapEnvelope.GetCorrespondingResponseAction();
 
         return Ok(responseEnvelope);
     }

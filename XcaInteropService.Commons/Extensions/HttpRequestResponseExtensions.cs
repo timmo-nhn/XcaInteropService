@@ -29,6 +29,7 @@ public static class HttpRequestResponseExtensions
             return string.Empty;
 
         var mediaType = responseMessage.Content.Headers.ContentType;
+
         if (!mediaType.MediaType.Equals("multipart/related", StringComparison.OrdinalIgnoreCase) &&
             !mediaType.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
         {
@@ -82,6 +83,10 @@ public static class HttpRequestResponseExtensions
         {
             using var sr = new StreamReader(section.Body);
             sections.Add(await sr.ReadToEndAsync());
+        }
+        if (sections.Count == 1)
+        {
+            return null;
         }
 
         return sections.LastOrDefault();

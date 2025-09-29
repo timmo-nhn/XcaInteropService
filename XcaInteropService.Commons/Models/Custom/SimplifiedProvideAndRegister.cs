@@ -20,7 +20,7 @@ public class SimplifiedProvideAndRegister
     public string ClassificationPracticeSettingCode { get; set; } = string.Empty;
     public string ClassificationDocumentClassCode { get; set; } = string.Empty;
     public string ClassificationDocumentTypeCode { get; set; } = string.Empty;
-    public ConceptType ClassificationConfidentialityCode { get; set; } = new() { code = string.Empty, codeSystemName = string.Empty, displayName = string.Empty };
+    public ConceptType ClassificationConfidentialityCode { get; set; } = new() { Code = string.Empty, CodeSystemName = string.Empty, DisplayName = string.Empty };
     public string ExternalIdentifierUniqueId { get; set; } = string.Empty;
     public string ExternalIdentifierPatientId { get; set; } = string.Empty;
 }

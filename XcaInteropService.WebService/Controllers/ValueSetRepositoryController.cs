@@ -3,9 +3,11 @@ using XcaInteropService.Commons.Models.Soap;
 
 namespace XcaInteropService.WebService.Controllers;
 
-public class SharedValueSetController : Controller
+
+[Route("/ValueSetRepository/services")]
+public class ValueSetRepositoryController : Controller
 {
-    [HttpPost]
+    [HttpPost("ValueSetRepositoryService")]
     public ActionResult RetrieveValueSet([FromBody] SoapEnvelope soapEnvelope)
     {
 

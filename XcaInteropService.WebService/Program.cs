@@ -37,6 +37,9 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        // Log thread and traceid and other stuff
+        //app.UseMiddleware<ThreadLoggingScopeMiddleware>();
+
         app.UseMiddleware<SessionIdTraceMiddleware>();
 
         app.UseHttpsRedirection();

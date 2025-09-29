@@ -167,9 +167,9 @@ public static class Constants
             {
                 new()
                 {
-                    code = "N",
-                    codeSystemName = "2.16.578.1.12.4.1.1.9603",
-                    displayName = "Normal"
+                    Code = "N",
+                    CodeSystemName = "2.16.578.1.12.4.1.1.9603",
+                    DisplayName = "Normal"
                 }
             };
 

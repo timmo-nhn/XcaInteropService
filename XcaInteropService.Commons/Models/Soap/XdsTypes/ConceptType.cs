@@ -8,11 +8,11 @@ namespace XcaInteropService.Commons.Models.Soap.XdsTypes;
 public class ConceptType
 {
     [XmlAttribute(AttributeName = "code")]
-    public string code = string.Empty;
+    public string Code = string.Empty;
 
     [XmlAttribute(AttributeName = "codeSystemName")]
-    public string codeSystemName = string.Empty;
+    public string CodeSystemName = string.Empty;
 
     [XmlAttribute(AttributeName = "displayName")]
-    public string displayName = string.Empty;
+    public string DisplayName = string.Empty;
 }

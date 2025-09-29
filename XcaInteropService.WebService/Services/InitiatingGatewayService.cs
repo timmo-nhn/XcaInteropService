@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Extensions;
@@ -22,6 +23,8 @@ public class InitiatingGatewayService
 
     public async Task<HttpResponseMessage> CrossGatewayQueryFromTargetCommunity(SoapEnvelope soapEnvelope, DomainConfig domainConfig)
     {
+        var stopWatch = Stopwatch.StartNew();
+
         var responseEnvelope = new SoapEnvelope();
 
         var newMessageId = Guid.NewGuid().ToString();
@@ -40,6 +43,9 @@ public class InitiatingGatewayService
 
         var client = _httpClientFactory.CreateClient();
         var response = await client.PostAsync(domainConfig.QueryUrl, content);
+
+        stopWatch.Stop();
+        _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Request Complete!\n\tAction: {soapEnvelope.Header.Action}\n\tLocation: {domainConfig.DomainOid}\n\tEndpoint: {domainConfig.QueryUrl}\n\tElapsed: {stopWatch.ElapsedMilliseconds}ms");
 
         return response;
     }
@@ -66,14 +72,14 @@ public class InitiatingGatewayService
 
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation($"{sessionId} - Response retrieved from {response.RequestMessage?.RequestUri}\nLocation: {domain.DomainOid}");
+                _logger.LogInformation($"{sessionId} - Response retrieved from Responding Gateway \n\tEndpoint: {response.RequestMessage?.RequestUri}\n\tLocation: {domain.DomainOid}");
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var communitySoapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(responseBody);
 
                 var registryObjects = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryObjectList;
                 var registryErrors = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryErrorList?.RegistryError;
 
-                _logger.LogInformation($"{sessionId} - Retrieved {registryObjects?.Length ?? 0} Registry objects\nLocation: {domain.DomainOid}");
+                _logger.LogInformation($"{sessionId} - Retrieved \n\tXDSEntries: {registryObjects?.Length ?? 0}\n\tLocation: {domain.DomainOid}");
 
                 responseEnvelope.Body.AdhocQueryResponse ??= new();
                 responseEnvelope.Body.AdhocQueryResponse.RegistryErrorList ??= new();
@@ -123,7 +129,6 @@ public class InitiatingGatewayService
         var sxmls = new SoapXmlSerializer();
 
         var responseEnvelope = new SoapEnvelope();
-        responseEnvelope.Header ??= new();
         responseEnvelope.Body ??= new();
 
         var documentRequests = soapEnvelope.Body.RetrieveDocumentSetRequest?.DocumentRequest;
@@ -188,7 +193,7 @@ public class InitiatingGatewayService
             var requestResponseSoapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(responseBody);
             var requestRegistryResponse = requestResponseSoapEnvelope.Body.RegistryResponse;
 
-            var documentResponse = requestResponseSoapEnvelope.Body.RetrieveDocumentSetResponse?.DocumentResponse.FirstOrDefault();
+            var documentResponse = requestResponseSoapEnvelope.Body.RetrieveDocumentSetResponse?.DocumentResponse?.FirstOrDefault();
 
             if (documentResponse != null)
             {
@@ -201,7 +206,6 @@ public class InitiatingGatewayService
                 };
                 document.SetInlineDocument(Encoding.UTF8.GetBytes(documentContent));
 
-                responseEnvelope.Header.Action = soapEnvelope.GetCorrespondingRequestAction();
                 responseEnvelope.Body.RetrieveDocumentSetResponse ??= new();
                 responseEnvelope.Body.RetrieveDocumentSetResponse.DocumentResponse ??= [];
                 responseEnvelope.Body.RetrieveDocumentSetResponse.DocumentResponse = [.. responseEnvelope.Body.RetrieveDocumentSetResponse.DocumentResponse, document];
