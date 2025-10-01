@@ -67,7 +67,7 @@ public class SoapEnvelopeModelBinder : IModelBinder
             }
 
 
-            var soapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(xmlString);
+            var soapEnvelope = sxmls.DeserializeXmlString<SoapEnvelope>(xmlString);
 
             bindingContext.Result = ModelBindingResult.Success(soapEnvelope);
         }
@@ -83,7 +83,7 @@ public class SoapEnvelopeModelBinder : IModelBinder
     {
         var sxmls = new SoapXmlSerializer();
         var soapFault = SoapExtensions.CreateSoapFault(message, code).Value;
-        var soapFaultXml = sxmls.SerializeSoapMessageToXmlString(soapFault).Content;
+        var soapFaultXml = sxmls.SerializeToXmlString(soapFault).Content;
 
         response.StatusCode = StatusCodes.Status500InternalServerError;
         response.ContentType = "application/soap+xml";

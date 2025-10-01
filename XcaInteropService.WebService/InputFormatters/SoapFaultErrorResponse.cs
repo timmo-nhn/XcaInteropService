@@ -58,7 +58,7 @@ public static class ErrorResponseFactory
             faultReason: string.Join("; ", context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))
         );
 
-        var soapFaultString = sxmls.SerializeSoapMessageToXmlString(soapFault.Value).Content;
+        var soapFaultString = sxmls.SerializeToXmlString(soapFault.Value).Content;
 
 
         return new ContentResult

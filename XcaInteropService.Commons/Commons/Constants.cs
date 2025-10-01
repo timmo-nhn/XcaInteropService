@@ -101,30 +101,40 @@ public static class Constants
             public const string Iti18ActionAsync = "urn:ihe:iti:2007:RegistryStoredQueryAsync";
             public const string Iti18Reply = "urn:ihe:iti:2007:RegistryStoredQueryResponse";
             public const string Iti18ReplyAsync = "urn:ihe:iti:2007:RegistryStoredQueryResponseAsync";
+
             public const string Iti38Action = "urn:ihe:iti:2007:CrossGatewayQuery";
             public const string Iti38ActionAsync = "urn:ihe:iti:2007:CrossGatewayQueryAsync";
             public const string Iti38Reply = "urn:ihe:iti:2007:CrossGatewayQueryResponse";
             public const string Iti38ReplyAsync = "urn:ihe:iti:2007:CrossGatewayQueryResponseAsync";
+
             public const string Iti39Action = "urn:ihe:iti:2007:CrossGatewayRetrieve";
             public const string Iti39ActionAsync = "urn:ihe:iti:2007:CrossGatewayRetrieveAsync";
             public const string Iti39Reply = "urn:ihe:iti:2007:CrossGatewayRetrieveResponse";
             public const string Iti39ReplyAsync = "urn:ihe:iti:2007:CrossGatewayRetrieveResponseAsync";
+
             public const string Iti43Action = "urn:ihe:iti:2007:RetrieveDocumentSet";
             public const string Iti43ActionAsync = "urn:ihe:iti:2007:RetrieveDocumentSetAsync";
             public const string Iti43Reply = "urn:ihe:iti:2007:RetrieveDocumentSetResponse";
             public const string Iti43ReplyAsync = "urn:ihe:iti:2007:RetrieveDocumentSetResponseAsync";
+
             public const string Iti41Action = "urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-b";
             public const string Iti41ActionAsync = "urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-bAsync";
             public const string Iti41Reply = "urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-bResponse";
             public const string Iti41ReplyAsync = "urn:ihe:iti:2007:ProvideAndRegisterDocumentSet-bResponseAsync";
+
             public const string Iti42Action = "urn:ihe:iti:2007:RegisterDocumentSet-b";
             public const string Iti42ActionAsync = "urn:ihe:iti:2007:RegisterDocumentSet-bAsync";
             public const string Iti42Reply = "urn:ihe:iti:2007:RegisterDocumentSet-bResponse";
             public const string Iti42ReplyAsync = "urn:ihe:iti:2007:RegisterDocumentSet-bResponseAsync";
+
+            public const string Iti48Action = "urn:ihe:iti:2008:RetrieveValueSet";
+            public const string Iti48Reply = "urn:ihe:iti:2008:RetrieveValueSetResponse";
+
             public const string Iti62Action = "urn:ihe:iti:2010:DeleteDocumentSet";
             public const string Iti62ActionAsync = "urn:ihe:iti:2010:DeleteDocumentSetAsync";
             public const string Iti62Reply = "urn:ihe:iti:2010:DeleteDocumentSetResponse";
             public const string Iti62ReplyAsync = "urn:ihe:iti:2010:DeleteDocumentSetResponseAsync";
+
             public const string Iti86Action = "urn:ihe:iti:2017:RemoveDocuments";
             public const string Iti86ActionAsync = "urn:ihe:iti:2017:RemoveDocumentsAsync";
             public const string Iti86Reply = "urn:ihe:iti:2017:RemoveDocumentsResponse";

@@ -1,5 +1,5 @@
 Domains:
-- DisplayName: XcaDS Test
+- FriendlyName: XcaDS Test
   DomainOid: 2.16.578.1.12.4.5.100.1
   Async: false
   Enabled: true

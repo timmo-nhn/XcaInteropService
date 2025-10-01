@@ -37,7 +37,7 @@ public class InitiatingGatewayService
         soapEnvelope.Header.MessageId = newMessageId;
 
         var sxmls = new SoapXmlSerializer();
-        var soapXml = sxmls.SerializeSoapMessageToXmlString(soapEnvelope, Constants.XmlDefaultOptions.DefaultXmlWriterSettingsInline).Content;
+        var soapXml = sxmls.SerializeToXmlString(soapEnvelope, Constants.XmlDefaultOptions.DefaultXmlWriterSettingsInline).Content;
 
         var content = new StringContent(soapXml, Encoding.UTF8, new System.Net.Http.Headers.MediaTypeHeaderValue(Constants.MimeTypes.SoapXml));
 
@@ -74,7 +74,7 @@ public class InitiatingGatewayService
             {
                 _logger.LogInformation($"{sessionId} - Response retrieved from Responding Gateway \n\tEndpoint: {response.RequestMessage?.RequestUri}\n\tLocation: {domain.DomainOid}");
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var communitySoapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(responseBody);
+                var communitySoapEnvelope = sxmls.DeserializeXmlString<SoapEnvelope>(responseBody);
 
                 var registryObjects = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryObjectList;
                 var registryErrors = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryErrorList?.RegistryError;
@@ -190,7 +190,7 @@ public class InitiatingGatewayService
             var responseBody = await HttpRequestResponseExtensions.ReadFirstMultiPartFromRequest(response);
             var documentContent = await HttpRequestResponseExtensions.ReadLastMultipartFromRequest(response);
 
-            var requestResponseSoapEnvelope = sxmls.DeserializeSoapMessage<SoapEnvelope>(responseBody);
+            var requestResponseSoapEnvelope = sxmls.DeserializeXmlString<SoapEnvelope>(responseBody);
             var requestRegistryResponse = requestResponseSoapEnvelope.Body.RegistryResponse;
 
             var documentResponse = requestResponseSoapEnvelope.Body.RetrieveDocumentSetResponse?.DocumentResponse?.FirstOrDefault();

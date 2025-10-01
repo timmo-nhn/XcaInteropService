@@ -39,7 +39,7 @@ public class SoapXmlSerializer
 
     }
 
-    public T DeserializeSoapMessage<T>(string xmlString)
+    public T DeserializeXmlString<T>(string xmlString)
     {
         var byteArray = Encoding.UTF8.GetBytes(xmlString);
         var memStream = new MemoryStream(byteArray);
@@ -95,7 +95,7 @@ public class SoapXmlSerializer
         }
     }
 
-    public SoapXmlSerializerResult SerializeSoapMessageToXmlString(object soapElement, XmlWriterSettings? settings = null)
+    public SoapXmlSerializerResult SerializeToXmlString(object soapElement, XmlWriterSettings? settings = null)
     {
         if (soapElement == null) throw new ArgumentNullException(nameof(soapElement));
 

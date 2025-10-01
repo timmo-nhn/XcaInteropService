@@ -1,7 +1,9 @@
+using System.Collections;
 using XcaInteropService.Commons.Models.Custom;
 using XcaInteropService.Source.Services;
 using XcaInteropService.WebService.Middleware;
 using XcaInteropService.WebService.Services;
+using XcaXds.WebService.Startup;
 
 namespace XcaInteropService.WebService;
 
@@ -18,6 +20,29 @@ public class Program
         .AddXmlSerializerFormatters();
 
         builder.Services.AddControllers();
+
+        var applicationConfig = new ApplicationConfig();
+
+        // If we are running in a container, override appsettings.json and environment variables for configuration
+        if (bool.Parse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false"))
+        {
+            var envVars = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().ToDictionary(entry => (string)entry.Key, entry => (string)entry.Value);
+            var xdsConfigEnvVars = envVars.Where(n => n.Key.StartsWith("XdsConfiguration")).ToList();
+            applicationConfig = ConfigBinder.BindKeyValueEnvironmentVariablesToXdsConfiguration(xdsConfigEnvVars);
+
+            builder.Configuration.Bind(applicationConfig);
+            Environment.SetEnvironmentVariable("TMP", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("TEMP", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("TMPDIR", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
+
+            Console.WriteLine(Path.GetTempPath()); // now returns /mnt/data/tmp/
+        }
+        else
+        {
+            builder.Configuration.GetSection("XdsConfiguration").Bind(applicationConfig);
+        }
+
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

@@ -68,10 +68,10 @@ public class SoapEnvelope
     public SoapEnvelope? DeepCopy()
     {
         var sxmls = new SoapXmlSerializer();
-        var soapSerializeResult = sxmls.SerializeSoapMessageToXmlString(this);
+        var soapSerializeResult = sxmls.SerializeToXmlString(this);
         if (soapSerializeResult.Content != null && soapSerializeResult.IsSuccess)
         {
-            return sxmls.DeserializeSoapMessage<SoapEnvelope>(soapSerializeResult.Content);
+            return sxmls.DeserializeXmlString<SoapEnvelope>(soapSerializeResult.Content);
         }
         return null;
     }
@@ -116,6 +116,12 @@ public partial class SoapBody
 
     [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
     public RemoveDocumentsRequestType? RemoveDocumentsRequest { get; set; }
+
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
+    public RetrieveValueSetRequest? RetrieveValueSetRequest { get; set; }
+
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
+    public RetrieveValueSetResponse? RetrieveValueSetResponse { get; set; }
 
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
     public Fault? Fault { get; set; }

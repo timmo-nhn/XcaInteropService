@@ -209,7 +209,7 @@ public static class HttpRequestResponseExtensions
             }
         }
 
-        var soapString = sxmls.SerializeSoapMessageToXmlString(soapEnvelope);
+        var soapString = sxmls.SerializeToXmlString(soapEnvelope);
         var soapContent = new StringContent(soapString.Content, Encoding.UTF8, Constants.MimeTypes.XopXml);
         soapContent.Headers.Add("Content-ID", [$"<{Guid.NewGuid().ToString().Replace("-", "")}@xcadocumentsource.com>"]);
         soapContent.Headers.ContentType?.Parameters.Add(new System.Net.Http.Headers.NameValueHeaderValue("type", $"\"{Constants.MimeTypes.SoapXml}\""));

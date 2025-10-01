@@ -5,15 +5,10 @@ namespace XcaInteropService.Commons.Models.Custom;
 public class TargetCommunitiesService
 {
     private readonly ILogger<TargetCommunitiesService> _logger;
-
     private readonly TargetCommunitiesWrapper _targetCommunitiesWrapper;
-
     private readonly FileSystemWatcher _watcher;
-
     private DomainConfigMap _domainConfig;
-
     private readonly string _domainConfigPath;
-
     private readonly string _domainConfigFile;
 
     public TargetCommunitiesService(ILogger<TargetCommunitiesService> logger, TargetCommunitiesWrapper targetCommunitiesWrapper)
@@ -51,7 +46,6 @@ public class TargetCommunitiesService
             _logger.LogError(ex, "Error reloading domain config.");
         }
     }
-
 
     public DomainConfigMap GetDomainConfigMap()
     {
@@ -118,5 +112,4 @@ public class TargetCommunitiesService
     {
         _domainConfig = _targetCommunitiesWrapper.ReadDomainConfigMap();
     }
-
 }
