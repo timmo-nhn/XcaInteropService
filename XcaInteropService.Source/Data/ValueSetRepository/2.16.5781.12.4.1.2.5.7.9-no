@@ -1,0 +1,6 @@
+<ValueSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="no" id="2.16.5781.12.4.1.2.5.7.9">
+  <ConceptList xml:lang="no" xmlns="urn:ihe:iti:svs:2008">
+    <Concept code="asdsad" codeSystemName="www" displayName="2222" />
+    <Concept code="asdsad" codeSystemName="www" displayName="2222" />
+  </ConceptList>
+</ValueSet>

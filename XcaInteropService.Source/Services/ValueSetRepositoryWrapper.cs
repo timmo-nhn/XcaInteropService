@@ -45,13 +45,23 @@ public class ValueSetRepositoryWrapper
         }
     }
 
-    public bool WriteValueSet(string id, ValueSetType valueSet)
+    public bool WriteValueSet(string id, string language, ValueSetType valueSet)
     {
         var sxmls = new SoapXmlSerializer();
 
         var valueSetString = sxmls.SerializeToXmlString(valueSet, Constants.XmlDefaultOptions.DefaultXmlWriterSettings);
-        File.WriteAllText(Path.Combine(_valueSetRepositoryPath, id), valueSetString.Content);
+        File.WriteAllText(Path.Combine(_valueSetRepositoryPath, $"{id}-{language}"), valueSetString.Content);
 
         return true;
+    }
+
+    public void DeleteConcept(string oid, ConceptType conceptId)
+    {
+        
+    }
+
+    public void DeleteValueSet(string oid)
+    {
+        throw new NotImplementedException();
     }
 }

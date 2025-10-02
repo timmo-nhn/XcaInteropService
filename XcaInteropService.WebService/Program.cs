@@ -42,6 +42,7 @@ public class Program
             builder.Configuration.GetSection("XdsConfiguration").Bind(applicationConfig);
         }
 
+        builder.Services.AddSingleton(applicationConfig);
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -50,6 +51,8 @@ public class Program
         builder.Services.AddSingleton<TargetCommunitiesService>();
         builder.Services.AddSingleton<TargetCommunitiesWrapper>();
         builder.Services.AddSingleton<InitiatingGatewayService>();
+        builder.Services.AddSingleton<ValueSetRepositoryService>();
+        builder.Services.AddSingleton<ValueSetRepositoryWrapper>();
 
         builder.Services.AddHttpClient();
 

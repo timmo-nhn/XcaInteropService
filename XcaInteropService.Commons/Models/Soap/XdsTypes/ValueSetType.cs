@@ -11,10 +11,10 @@ public class ValueSetType
     public string Id { get; set; }
 
     [XmlAttribute(AttributeName = "lang", Form = XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/XML/1998/namespace")]
-    public string lang;
+    public string? lang;
 
     [XmlAttribute("displayName")]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     public ConceptListType ConceptList { get; set; }
 }

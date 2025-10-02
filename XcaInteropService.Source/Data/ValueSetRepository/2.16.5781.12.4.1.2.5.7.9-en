@@ -1,0 +1,35 @@
+<ValueSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en" id="2.16.5781.12.4.1.2.5.7.9">
+  <ConceptList xml:lang="en" xmlns="urn:ihe:iti:svs:2008">
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+    <Concept code="hibb" codeSystemName="gobb" displayName="gæbb" />
+  </ConceptList>
+</ValueSet>
