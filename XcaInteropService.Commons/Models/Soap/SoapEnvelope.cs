@@ -120,8 +120,11 @@ public partial class SoapBody
     [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
     public RetrieveValueSetRequest? RetrieveValueSetRequest { get; set; }
 
-    [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]
     public RetrieveValueSetResponse? RetrieveValueSetResponse { get; set; }
+
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]
+    public RetrieveMultipleValueSetResponse? RetrieveMultipleValueSetsResponse { get; set; }
 
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
     public Fault? Fault { get; set; }

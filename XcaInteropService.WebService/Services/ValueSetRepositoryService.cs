@@ -60,9 +60,9 @@ public class ValueSetRepositoryService
             DisplayName = displayName
         };
 
-        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == oid && vs.lang == language);
+        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == oid && vs.Language == language);
 
-        if (valueSet == null || valueSet.lang != language)
+        if (valueSet == null || valueSet.Language != language)
         {
             _logger.LogInformation($"Adding new ValueSet {oid} - {language}");
             response.SetMessage($"Added new ValueSet {oid} - {language}");
@@ -70,7 +70,7 @@ public class ValueSetRepositoryService
             valueSet = new()
             {
                 Id = oid,
-                lang = language
+                Language = language
             };
         }
         else
@@ -90,43 +90,107 @@ public class ValueSetRepositoryService
         return response;
     }
 
-    public bool UploadConceptList(string oid, string lang, ValueSetType valueSet)
+    public RestfulApiResponse UploadConceptList(string oid, string lang, ValueSetType valueSet)
     {
         return UploadConceptList(oid, lang, valueSet.ConceptList.Concept.ToList());
+
     }
 
-    public bool UploadConceptList(string oid, string lang, List<ConceptType> conceptList)
+    public RestfulApiResponse UploadConceptList(string oid, string language, List<ConceptType> conceptList)
     {
-        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == oid);
+        var response = new RestfulApiResponse();
+
+        // Find existing valueset based on OID and language
+        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == oid && vs.Language == language);
 
         if (valueSet == null)
         {
+            var message = $"Adding {conceptList.Count} values to new ValueSet: {oid} - {language}";
+            _logger.LogInformation(message);
+            response.SetMessage(message);
+
             valueSet = new()
             {
                 Id = oid,
-                ConceptList = new()
-                {
-                    lang = lang,
-                    Concept = [.. conceptList]
-                }
+                Language = language
             };
         }
+        else
+        {
+            var message = $"Added {conceptList.Count} value(s) to ValueSet: {oid} - {language}";
+            _logger.LogInformation(message);
+            response.SetMessage(message);
+        }
 
-        _valueSetRepositoryWrapper.WriteValueSet(oid, lang, valueSet);
+        valueSet.ConceptList ??= new();
+        valueSet.ConceptList.Concept = [.. valueSet.ConceptList.Concept ?? [], .. conceptList];
+
+        _valueSetRepositoryWrapper.WriteValueSet(oid, language, valueSet);
+
 
         _valueSets = _valueSetRepositoryWrapper.ReadAllValueSets();
 
-        return true;
+        return response;
     }
 
-    public bool DeleteConcept(string oid, string conceptId)
+    public RestfulApiResponse UpdateSingleConcept(string oid, string language, string codeToReplace, string? newCode = null, string? newCodeSystem = null, string? newDisplayName = null)
     {
+        var response = new RestfulApiResponse();
+
+        // Find existing valueset based on OID and language
+        var valueSetIndex = _valueSets.FindIndex(vs => vs.Id == oid && vs.Language == language);
+
+        if (valueSetIndex == -1)
+        {
+            _logger.LogWarning($"No value set with oid: {oid}, language: {language}");
+            response.SetMessage($"No value set with oid: {oid}, language: {language}");
+            return response;
+        }
+
+        var valueSet = _valueSets[valueSetIndex];
+
+        var conceptIndex = Array.FindIndex(valueSet.ConceptList.Concept, vs => vs.Code == codeToReplace);
+
+        if (conceptIndex == -1)
+        {
+            _logger.LogWarning($"No concept with code: {codeToReplace}");
+            response.SetMessage($"No concept with code: {codeToReplace}");
+            return response;
+        }
+
+        var theConcept = valueSet.ConceptList.Concept[conceptIndex];
+
+        valueSet.ConceptList.Concept[conceptIndex] = new()
+        {
+            Code = newCode ?? codeToReplace,
+            CodeSystemName = newCodeSystem ?? theConcept.CodeSystemName,
+            DisplayName = newDisplayName ?? theConcept.DisplayName,
+        };
+
+        _valueSetRepositoryWrapper.WriteValueSet(oid, language, valueSet);
+        _valueSets = _valueSetRepositoryWrapper.ReadAllValueSets();
+
+        return response;
+    }
+
+    public RestfulApiResponse DeleteConcept(string oid, string conceptId)
+    {
+        var response = new RestfulApiResponse();
+
         var valueSet = _valueSets.FirstOrDefault(v => v.Id == oid);
-        if (valueSet == null) return false;
+        if (valueSet == null)
+        {
+
+        }
 
         var concepts = _valueSets.Select(vs => vs.ConceptList.Concept).Where(c => c.Any(con => con.Code == conceptId || con.DisplayName == conceptId));
 
         _valueSets = _valueSetRepositoryWrapper.ReadAllValueSets();
         return true;
+    }
+
+    public RestfulApiResponse RenameValueSet(string oid, string language)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -49,13 +49,15 @@ public class ValueSetRepositoryWrapper
     {
         var sxmls = new SoapXmlSerializer();
 
+        valueSet.ConceptList.Concept = valueSet.ConceptList.Concept.DistinctBy(vs => new {vs.Code, vs.CodeSystemName, vs.DisplayName} ).ToArray();
+
         var valueSetString = sxmls.SerializeToXmlString(valueSet, Constants.XmlDefaultOptions.DefaultXmlWriterSettings);
         File.WriteAllText(Path.Combine(_valueSetRepositoryPath, $"{id}-{language}"), valueSetString.Content);
 
         return true;
     }
 
-    public void DeleteConcept(string oid, ConceptType conceptId)
+    public void DeleteConcept(string oid, string conceptCode)
     {
         
     }

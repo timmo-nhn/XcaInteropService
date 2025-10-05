@@ -5,6 +5,7 @@ namespace XcaInteropService.Commons.Models.Custom;
 public class DomainConfig
 {
     public string? FriendlyName { get; set; }
+    public string PatientAssigningAuthority { get; set; }
     public string DomainOid { get; set; }
     public bool Async { get; set; } = false;
     public bool Enabled { get; set; } = true;

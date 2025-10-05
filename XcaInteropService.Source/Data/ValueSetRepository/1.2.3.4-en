@@ -1,5 +1,11 @@
-<ValueSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="1.2.3.4">
+<ValueSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en" id="1.2.3.4">
   <ConceptList xml:lang="en" xmlns="urn:ihe:iti:svs:2008">
-    <Concept code="" codeSystemName="" displayName="" />
+    <Concept code="13116900216" codeSystemName="2.16.578.1.12.4.1.4.1" displayName="skoltesame" />
+    <Concept code="aosaogs" codeSystemName="2.16.578.1.12.4.1.4.1" displayName="Test 123" />
+    <Concept code="gobb" codeSystemName="gæbb" displayName="skoltesame" />
+    <Concept code="gibb" codeSystemName="gabb" displayName="ssss" />
+    <Concept code="123" codeSystemName="ga346bb" displayName="45" />
+    <Concept code="strong" codeSystemName="strang" displayName="streng" />
+    <Concept code="123" codeSystemName="234" displayName="234233" />
   </ConceptList>
 </ValueSet>

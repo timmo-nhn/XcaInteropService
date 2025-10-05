@@ -36,9 +36,8 @@ public class TargetCommunitiesService
     {
         try
         {
-            _logger.LogInformation($"{Path.GetFileName(_domainConfigFile)} reloaded successfully.");
-
             RefreshDomainConfig();
+            _logger.LogInformation($"{Path.GetFileName(_domainConfigFile)} reloaded successfully.");
 
         }
         catch (Exception ex)
