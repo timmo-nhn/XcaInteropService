@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using XcaInteropService.Commons.Commons;
+using XcaInteropService.Commons.Extensions;
 using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.WebService.Services;
 
@@ -43,7 +44,10 @@ public class ValueSetRepositoryController : Controller
                 break;
 
             default:
-                break;
+                _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Unknown action: {action} from {Request.HttpContext.Connection.RemoteIpAddress}");
+                requestTimer.Stop();
+                _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Completed action: {action} in {requestTimer.ElapsedMilliseconds} ms");
+                return BadRequest(SoapExtensions.CreateSoapFault("soapenv:Reciever", detail: action, faultReason: $"The [action] cannot be processed at the receiver").Value);
         }
 
         requestTimer.Stop();
