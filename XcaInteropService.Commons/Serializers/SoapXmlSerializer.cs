@@ -65,6 +65,7 @@ public class SoapXmlSerializer
             namespaceManager.AddNamespace("p7", Constants.Soap.Namespaces.Xsi);
             namespaceManager.AddNamespace("lcm", Constants.Soap.Namespaces.Lcm);
             namespaceManager.AddNamespace("rim", Constants.Soap.Namespaces.Rim);
+            namespaceManager.AddNamespace("svs", Constants.Soap.Namespaces.Svs);
 
             var bodyElement = xmlDoc.SelectSingleNode("//s:Body", namespaceManager);
 

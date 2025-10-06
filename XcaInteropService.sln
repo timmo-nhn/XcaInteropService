@@ -16,6 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XcaInteropService.Source", 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XcaInteropService.Tests", "XcaInteropService.Tests\XcaInteropService.Tests.csproj", "{19DC00E9-0C74-41D1-9D38-4B4D5E364215}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589} = {1B5EA4D7-4957-4AB9-ADAA-B43B2D8A1589}
+		{53A88474-BE59-42E3-8CBE-3CC498B25D8F} = {53A88474-BE59-42E3-8CBE-3CC498B25D8F}
+		{F5186902-0B56-4A22-A3E8-90555BF92955} = {F5186902-0B56-4A22-A3E8-90555BF92955}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

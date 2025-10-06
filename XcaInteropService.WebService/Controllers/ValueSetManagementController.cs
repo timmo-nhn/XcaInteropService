@@ -43,9 +43,9 @@ public class ValueSetManagementController : Controller
 
     [Consumes("application/xml")]
     [HttpPost("upload-multiple-value-sets-xml")]
-    public IActionResult UploadMultipleValueSetsXml([FromQuery] string oid, [FromQuery] string language, [FromBody] ValueSetType valueSet)
+    public IActionResult UploadMultipleValueSetsXml([FromBody] ValueSetType valueSet)
     {
-        var uploadResponse = _valueSetRepositoryService.UploadConceptList(oid, language, valueSet);
+        var uploadResponse = _valueSetRepositoryService.UploadConceptList(valueSet.Id, valueSet.Language, valueSet);
 
         return Ok(uploadResponse);
     }
@@ -53,16 +53,32 @@ public class ValueSetManagementController : Controller
     [HttpPut("update-concept")]
     public IActionResult UpdateConcept(string oid, string language, string codeToReplace, string? newCode = null, string? newCodeSystem = null, string? newDisplayName = null)
     {
-        var uploadResponse = _valueSetRepositoryService.UpdateSingleConcept(oid, language, codeToReplace, newCode, newCodeSystem, newDisplayName);
+        var updateResponse = _valueSetRepositoryService.UpdateSingleConcept(oid, language, codeToReplace, newCode, newCodeSystem, newDisplayName);
 
-        return Ok(uploadResponse);
+        return Ok(updateResponse);
+    }
+
+    [HttpDelete("delete-concept")]
+    public IActionResult DeleteConcept(string oid, string language, string code)
+    {
+        var deleteResponse = _valueSetRepositoryService.DeleteConcept(oid, language, code);
+
+        return Ok(deleteResponse);
     }
 
     [HttpPut("rename-valueset")]
-    public IActionResult RenameValueSet(string oid, string language, string newOid, string newLanguage)
+    public IActionResult RenameValueSet(string oid, string language, string newOid, string? newLanguage = null)
     {
-        var uploadResponse = _valueSetRepositoryService.RenameValueSet(oid, language);
+        var renameResponse = _valueSetRepositoryService.RenameValueSet(oid, language, newOid, newLanguage);
 
-        return Ok(uploadResponse);
+        return Ok(renameResponse);
+    }
+
+    [HttpDelete("delete-valueset")]
+    public IActionResult DeleteValueSet(string oid, string language)
+    {
+        var deleteResponse = _valueSetRepositoryService.DeletValueSet(oid, language);
+
+        return Ok(deleteResponse);
     }
 }

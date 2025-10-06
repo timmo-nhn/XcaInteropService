@@ -1,4 +1,4 @@
-﻿namespace XcaXds.WebService.Startup;
+﻿namespace XcaInteropService.WebService.Startup;
 
 public static class ConfigBinder
 {

@@ -1,4 +1,4 @@
-﻿namespace XcaXds.WebService.Attributes;
+﻿namespace XcaInteropService.WebService.Attributes;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class UseAuditLoggingMiddlewareAttribute : Attribute

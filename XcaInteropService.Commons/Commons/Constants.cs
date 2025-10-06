@@ -130,6 +130,9 @@ public static class Constants
             public const string Iti48Action = "urn:ihe:iti:2008:RetrieveValueSet";
             public const string Iti48Reply = "urn:ihe:iti:2008:RetrieveValueSetResponse";
 
+            public const string Iti60Action = "urn:ihe:iti:2010:RetrieveMultipleValueSets";
+            public const string Iti60Reply = "urn:ihe:iti:2010:RetrieveMultipleValueSetsResponse";
+
             public const string Iti62Action = "urn:ihe:iti:2010:DeleteDocumentSet";
             public const string Iti62ActionAsync = "urn:ihe:iti:2010:DeleteDocumentSetAsync";
             public const string Iti62Reply = "urn:ihe:iti:2010:DeleteDocumentSetResponse";

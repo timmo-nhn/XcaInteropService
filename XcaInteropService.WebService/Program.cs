@@ -1,9 +1,10 @@
 using System.Collections;
+using Microsoft.FeatureManagement;
 using XcaInteropService.Commons.Models.Custom;
 using XcaInteropService.Source.Services;
 using XcaInteropService.WebService.Middleware;
 using XcaInteropService.WebService.Services;
-using XcaXds.WebService.Startup;
+using XcaInteropService.WebService.Startup;
 
 namespace XcaInteropService.WebService;
 
@@ -55,6 +56,9 @@ public class Program
         builder.Services.AddSingleton<ValueSetRepositoryWrapper>();
 
         builder.Services.AddHttpClient();
+
+        // Feature Toggle (located in XcaXds.WebService/appsettings.json)
+        builder.Services.AddFeatureManagement();
 
         var app = builder.Build();
 

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using XcaXds.WebService.Attributes;
+using XcaInteropService.WebService.Attributes;
 
 namespace XcaInteropService.WebService.Middleware;
 

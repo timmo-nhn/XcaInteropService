@@ -25,7 +25,7 @@ public class TargetCommunitiesService
         _watcher = new FileSystemWatcher(_domainConfigPath)
         {
             Filter = Path.GetFileName(_domainConfigFile),
-            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size
+            NotifyFilter = NotifyFilters.LastWrite
         };
 
         _watcher.Changed += OnConfigFileChanged;
@@ -38,7 +38,6 @@ public class TargetCommunitiesService
         {
             RefreshDomainConfig();
             _logger.LogInformation($"{Path.GetFileName(_domainConfigFile)} reloaded successfully.");
-
         }
         catch (Exception ex)
         {

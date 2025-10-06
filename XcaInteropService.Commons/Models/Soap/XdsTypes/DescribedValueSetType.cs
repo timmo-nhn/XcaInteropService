@@ -49,7 +49,7 @@ public class DescribedValueSetType
     [XmlIgnore]
     public DateTime ExpirationDate { get; set; }
 
-    [XmlElement("EffectiveDate")]
+    [XmlElement("ExpirationDate")]
     public string ExpirationDateString
     {
         get { return ExpirationDate.ToString(Constants.Hl7.Dtm.DtmFhirIsoDateFormat); }
@@ -59,7 +59,7 @@ public class DescribedValueSetType
     [XmlIgnore]
     public DateTime CreationDate { get; set; }
 
-    [XmlElement("EffectiveDate")]
+    [XmlElement("CreationDate")]
     public string CreationDateString
     {
         get { return CreationDate.ToString(Constants.Hl7.Dtm.DtmFhirIsoDateFormat); }
@@ -69,7 +69,7 @@ public class DescribedValueSetType
     [XmlIgnore]
     public DateTime RevisionDate { get; set; }
 
-    [XmlElement("EffectiveDate")]
+    [XmlElement("RevisionDate")]
     public string RevisionDateString
     {
         get { return RevisionDate.ToString(Constants.Hl7.Dtm.DtmFhirIsoDateFormat); }

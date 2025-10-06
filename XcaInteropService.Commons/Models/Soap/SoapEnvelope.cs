@@ -117,7 +117,7 @@ public partial class SoapBody
     [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
     public RemoveDocumentsRequestType? RemoveDocumentsRequest { get; set; }
 
-    [XmlElement(Namespace = Constants.Xds.Namespaces.Rmd)]
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]
     public RetrieveValueSetRequest? RetrieveValueSetRequest { get; set; }
 
     [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]

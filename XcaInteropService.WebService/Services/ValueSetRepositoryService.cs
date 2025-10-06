@@ -26,7 +26,7 @@ public class ValueSetRepositoryService
         var valueSetRequest = soapEnvelope.Body.RetrieveValueSetRequest;
 
         var valueSet = valueSetRequest?.ValueSet;
-        var responseValueSet = _valueSets.FirstOrDefault(vs => vs.Id == valueSet?.Id);
+        var responseValueSet = _valueSets.FirstOrDefault(vs => vs.Id == valueSet.Id && vs.Language == valueSet.Language);
 
         responseEnvelope.Header = new()
         {
@@ -43,6 +43,12 @@ public class ValueSetRepositoryService
 
         return responseEnvelope;
     }
+
+    public SoapEnvelope RetrieveMultipleValueSets(SoapEnvelope soapEnvelope)
+    {
+        throw new NotImplementedException();
+    }
+
 
     public List<ValueSetType> GetValueSetList()
     {
@@ -93,7 +99,6 @@ public class ValueSetRepositoryService
     public RestfulApiResponse UploadConceptList(string oid, string lang, ValueSetType valueSet)
     {
         return UploadConceptList(oid, lang, valueSet.ConceptList.Concept.ToList());
-
     }
 
     public RestfulApiResponse UploadConceptList(string oid, string language, List<ConceptType> conceptList)
@@ -173,23 +178,51 @@ public class ValueSetRepositoryService
         return response;
     }
 
-    public RestfulApiResponse DeleteConcept(string oid, string conceptId)
+    public RestfulApiResponse DeleteConcept(string oid, string language, string code)
     {
         var response = new RestfulApiResponse();
 
-        var valueSet = _valueSets.FirstOrDefault(v => v.Id == oid);
-        if (valueSet == null)
-        {
+        var valueSetIndex = _valueSets.FindIndex(vs => vs.Id == oid && vs.Language == language);
 
+        if (valueSetIndex == -1)
+        {
+            _logger.LogWarning($"No value set with oid: {oid}, language: {language}");
+            response.SetMessage($"No value set with oid: {oid}, language: {language}");
+            return response;
         }
 
-        var concepts = _valueSets.Select(vs => vs.ConceptList.Concept).Where(c => c.Any(con => con.Code == conceptId || con.DisplayName == conceptId));
+        var valueSet = _valueSets[valueSetIndex];
 
+
+        var conceptIndex = Array.FindIndex(valueSet.ConceptList.Concept, vs => vs.Code == code);
+
+        if (conceptIndex == -1)
+        {
+            _logger.LogWarning($"No concept with code: {code}");
+            response.SetMessage($"No concept with code: {code}");
+            return response;
+        }
+
+        var valueSetWithoutConcept = valueSet.ConceptList.Concept.ToList();
+        valueSetWithoutConcept.RemoveAt(conceptIndex);
+
+        valueSet.ConceptList.Concept = valueSetWithoutConcept.ToArray();
+
+        _logger.LogWarning($"Deleted concept with code: {code}");
+        response.SetMessage($"Deleted concept with code: {code}");
+
+        _valueSetRepositoryWrapper.WriteValueSet(oid, language, valueSet);
         _valueSets = _valueSetRepositoryWrapper.ReadAllValueSets();
-        return true;
+
+        return response;
     }
 
-    public RestfulApiResponse RenameValueSet(string oid, string language)
+    public RestfulApiResponse RenameValueSet(string oid, string language, string? newOid, string? newLanguage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public RestfulApiResponse DeletValueSet(string oid, string language)
     {
         throw new NotImplementedException();
     }
