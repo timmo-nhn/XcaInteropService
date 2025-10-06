@@ -42,15 +42,6 @@ public class ValueSetManagementController : Controller
     }
 
     [Consumes("application/xml")]
-    [HttpPost("upload-value-set-xml")]
-    public IActionResult UploadConceptListXml([FromQuery] string oid, [FromQuery] string language, [FromBody] ValueSetType valueSet)
-    {
-        var uploadResponse = _valueSetRepositoryService.UploadConceptList(oid, language, valueSet);
-
-        return Ok(uploadResponse);
-    }
-
-    [Consumes("application/xml")]
     [HttpPost("upload-multiple-value-sets-xml")]
     public IActionResult UploadMultipleValueSetsXml([FromQuery] string oid, [FromQuery] string language, [FromBody] ValueSetType valueSet)
     {
