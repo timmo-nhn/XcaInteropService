@@ -273,10 +273,30 @@ public class InitiatingGatewayService
         return responseEnvelope;
     }
 
-    public SoapEnvelope ProcessNonQueriedDomains(SoapEnvelope responseEnvelope, List<DomainConfig> domainConfigMap)
+    public SoapEnvelope ProcessNonQueriedDomains(SoapEnvelope responseEnvelope, List<DomainConfig> nonQueriedDomains)
     {
+        nonQueriedDomains = nonQueriedDomains.Where(rd => rd.Return != Commons.Enums.DomainReturn.DocumentList).ToList();
+
+
         responseEnvelope.Body = new();
 
+        responseEnvelope.Body.RegistryResponse ??= new();
+
+        foreach (var domain in nonQueriedDomains)
+        {
+            switch (domain.Return)
+            {
+                case Commons.Enums.DomainReturn.EmptyDocumentList:
+                    break;
+
+                case Commons.Enums.DomainReturn.RegistryError:
+                    responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.DomainOid}", domain.DomainOid);
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
 
         return responseEnvelope;

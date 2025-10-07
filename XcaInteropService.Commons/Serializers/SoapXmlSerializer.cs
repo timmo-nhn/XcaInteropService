@@ -34,6 +34,7 @@ public class SoapXmlSerializer
     {
         _xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8, OmitXmlDeclaration = true };
     }
+
     public SoapXmlSerializer()
     {
 

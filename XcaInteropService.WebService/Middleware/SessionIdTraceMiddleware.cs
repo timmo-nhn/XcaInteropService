@@ -31,7 +31,6 @@ public class SessionIdTraceMiddleware
             requestBody = await HttpRequestResponseExtensions.ReadMultipartContentFromRequest(httpContext);
         }
 
-
         switch (contentType)
         {
             case Constants.MimeTypes.XopXml:
