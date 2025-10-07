@@ -9,6 +9,7 @@ public class DomainConfig
     public string DomainOid { get; set; }
     public bool Async { get; set; } = false;
     public bool Enabled { get; set; } = true;
+    public DomainReturn Return {  get; set; }
     public PatientResolverType PatientResolverType { get; set; } = PatientResolverType.IDENTITY;
     public string QueryUrl { get; set; }
     public string? RetrieveUrl { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using XcaInteropService.Commons.Commons;
@@ -42,7 +43,39 @@ public class InitiatingGatewayService
         var content = new StringContent(soapXml, Encoding.UTF8, new System.Net.Http.Headers.MediaTypeHeaderValue(Constants.MimeTypes.SoapXml));
 
         var client = _httpClientFactory.CreateClient();
-        var response = await client.PostAsync(domainConfig.QueryUrl, content);
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await client.PostAsync(domainConfig.QueryUrl, content);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, $"{soapEnvelope.Header.MessageId} - Error calling {domainConfig.QueryUrl}: {ex.Message}");
+
+            // Return a synthetic HTTP response to keep the pipeline consistent
+            var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                ReasonPhrase = "XCA Request Failed",
+                Content = new StringContent($"Could not contact target community ({domainConfig.QueryUrl}): {ex.Message}",Encoding.UTF8,"text/plain"),
+                RequestMessage = new HttpRequestMessage(HttpMethod.Post, domainConfig.QueryUrl)
+            };
+
+            return errorResponse;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"{soapEnvelope.Header.MessageId} - Unexpected error calling {domainConfig.QueryUrl}");
+
+            var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                ReasonPhrase = "Unexpected Error",
+                Content = new StringContent($"Unexpected error: {ex.Message}", Encoding.UTF8, "text/plain"),
+                RequestMessage = new HttpRequestMessage(HttpMethod.Post, domainConfig.QueryUrl)
+            };
+
+            return errorResponse;
+        }
 
         stopWatch.Stop();
         _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Request Complete!\n\tAction: {soapEnvelope.Header.Action}\n\tLocation: {domainConfig.DomainOid}\n\tEndpoint: {domainConfig.QueryUrl}\n\tElapsed: {stopWatch.ElapsedMilliseconds}ms");
@@ -50,10 +83,8 @@ public class InitiatingGatewayService
         return response;
     }
 
-    public async Task<SoapEnvelope> ProcessCrossGatewayQueryResponseMessages(HttpResponseMessage[] httpRequests, string sessionId, DomainConfigMap domainConfigMap)
+    public async Task<SoapEnvelope> ProcessCrossGatewayQueryResponseMessages(HttpResponseMessage[] httpRequests, string sessionId, SoapEnvelope responseEnvelope, List<DomainConfig> domainConfigMap)
     {
-        var responseEnvelope = new SoapEnvelope();
-
         responseEnvelope.Header ??= new();
         responseEnvelope.Header.Action = Constants.Xds.OperationContract.Iti38Reply;
         responseEnvelope.Body ??= new();
@@ -62,11 +93,11 @@ public class InitiatingGatewayService
 
         foreach (var response in httpRequests)
         {
-            var domain = domainConfigMap.Domains.FirstOrDefault(dom => dom.QueryUrl == response.RequestMessage?.RequestUri?.AbsoluteUri);
+            var domain = domainConfigMap.FirstOrDefault(dom => dom.QueryUrl == response.RequestMessage?.RequestUri?.AbsoluteUri);
 
             if (domain == null)
             {
-                _logger.LogInformation($"{sessionId} - Domain for {response.RequestMessage?.RequestUri?.AbsoluteUri} not found, that should'nt happen?!");
+                _logger.LogInformation($"{sessionId} - Domain for {response.RequestMessage?.RequestUri?.AbsoluteUri} not found, that shouldn't happen?!");
                 continue;
             }
 
@@ -237,6 +268,15 @@ public class InitiatingGatewayService
 
             _logger.LogWarning($"{sessionId}\n#############  Error #{i + 1}  #############\n\tCode: {error.ErrorCode}\n\tCodeContext: {error.CodeContext}\n\tLocation: {error.Location}\n######################################");
         }
+
+
+        return responseEnvelope;
+    }
+
+    public SoapEnvelope ProcessNonQueriedDomains(SoapEnvelope responseEnvelope, List<DomainConfig> domainConfigMap)
+    {
+        responseEnvelope.Body = new();
+
 
 
         return responseEnvelope;

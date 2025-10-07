@@ -11,7 +11,7 @@ XcaInteropService (Xca Interoperability Service) is a web service implementation
 The XCA Initiating gateway allows for Cross-community query and retrieve of documents and document metadata based on SOAP and IHE profiles.
 
 ### [Domain Configuration](/Docs/DomainConfig.md)
-Descirbes the format and usage of the domain configuration
+Describes the format and usage of the domain configuration
 
 ### [ValueSet/Terminology Server](/Docs/ValueSetTerminology.md)
 Value Set and Terminology Server

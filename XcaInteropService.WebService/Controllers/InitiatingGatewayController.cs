@@ -53,17 +53,28 @@ public class InitiatingGatewayController : ControllerBase
             case Constants.Xds.OperationContract.Iti38Action:
 
                 var runningTasks = new List<Task<HttpResponseMessage>>();
+                var relevantDomains = new DomainConfigMap();
 
                 foreach (var targetCommunity in domainConfigMap.Domains)
                 {
                     if (!targetCommunity.Enabled) continue;
-
+                    
+                    relevantDomains.Domains.Add(targetCommunity);
                     runningTasks.Add(_initiatingGatewayService.CrossGatewayQueryFromTargetCommunity(soapEnvelope, targetCommunity));
                 }
 
                 var results = await Task.WhenAll(runningTasks);
 
-                responseEnvelope = await _initiatingGatewayService.ProcessCrossGatewayQueryResponseMessages(results, Request.HttpContext.TraceIdentifier, domainConfigMap);
+
+                // Domains which will receive a HTTP request
+                var queriedDomains = relevantDomains.Domains.Where(rd => rd.Enabled && rd.Return == Commons.Enums.DomainReturn.DocumentList).ToList();
+
+                // Domains which will NOT receive a HTTP request
+                var nonQueriedDomains = relevantDomains.Domains.Where(rd => rd.Return != Commons.Enums.DomainReturn.DocumentList).ToList();
+
+                responseEnvelope = _initiatingGatewayService.ProcessNonQueriedDomains(responseEnvelope, nonQueriedDomains);
+
+                responseEnvelope = await _initiatingGatewayService.ProcessCrossGatewayQueryResponseMessages(results, Request.HttpContext.TraceIdentifier, responseEnvelope, queriedDomains);
 
                 break;
 
