@@ -14,4 +14,4 @@ The XCA Initiating gateway allows for Cross-community query and retrieve of docu
 Describes the format and usage of the domain configuration
 
 ### [ValueSet/Terminology Server](/Docs/ValueSetTerminology.md)
-Value Set and Terminology Server
+Sharing of common concepts and values

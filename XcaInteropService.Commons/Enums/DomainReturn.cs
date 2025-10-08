@@ -13,7 +13,7 @@ public enum DomainReturn
     EmptyDocumentList,
 
     /// <summary>
-    /// Return when the domain is unable to be contacted due to technical difficulties on the domain end.
+    /// Return when the domain is unable to be properly contacted due to technical difficulties on the domain end.
     /// </summary>
     RegistryError
 }

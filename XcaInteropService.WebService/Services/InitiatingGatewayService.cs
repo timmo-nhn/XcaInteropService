@@ -277,7 +277,6 @@ public class InitiatingGatewayService
     {
         nonQueriedDomains = nonQueriedDomains.Where(rd => rd.Return != Commons.Enums.DomainReturn.DocumentList).ToList();
 
-
         responseEnvelope.Body = new();
 
         responseEnvelope.Body.RegistryResponse ??= new();

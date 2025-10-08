@@ -50,7 +50,13 @@ public class InitiatingGatewayController : ControllerBase
 
         switch (action)
         {
+            case Constants.Xds.OperationContract.Iti18Action:
             case Constants.Xds.OperationContract.Iti38Action:
+
+                if (soapEnvelope.Header.Action == Constants.Xds.OperationContract.Iti18Action)
+                {
+                    soapEnvelope.Header.Action = Constants.Xds.OperationContract.Iti38Action;
+                }
 
                 var runningTasks = new List<Task<HttpResponseMessage>>();
                 var relevantDomains = new DomainConfigMap();
@@ -65,7 +71,6 @@ public class InitiatingGatewayController : ControllerBase
 
                 var results = await Task.WhenAll(runningTasks);
 
-
                 // Domains which will receive a HTTP request
                 var queriedDomains = relevantDomains.Domains.Where(rd => rd.Enabled && rd.Return == Commons.Enums.DomainReturn.DocumentList).ToList();
 
@@ -79,7 +84,14 @@ public class InitiatingGatewayController : ControllerBase
                 break;
 
 
+            case Constants.Xds.OperationContract.Iti43Action:
             case Constants.Xds.OperationContract.Iti39Action:
+
+                if (soapEnvelope.Header.Action == Constants.Xds.OperationContract.Iti43Action)
+                {
+                    soapEnvelope.Header.Action = Constants.Xds.OperationContract.Iti39Action;
+                }
+
                 responseEnvelope = await _initiatingGatewayService.CrossGatewayRetrieveFromTargetCommunity(soapEnvelope, Request.HttpContext.TraceIdentifier, domainConfigMap);
 
                 responseEnvelope.Header = new();
