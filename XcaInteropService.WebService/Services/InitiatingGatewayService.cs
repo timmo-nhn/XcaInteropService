@@ -57,7 +57,7 @@ public class InitiatingGatewayService
             var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
             {
                 ReasonPhrase = "XCA Request Failed",
-                Content = new StringContent($"Could not contact target community ({domainConfig.QueryUrl}): {ex.Message}",Encoding.UTF8,"text/plain"),
+                Content = new StringContent($"Could not contact target community ({domainConfig.QueryUrl}): {ex.Message}", Encoding.UTF8, "text/plain"),
                 RequestMessage = new HttpRequestMessage(HttpMethod.Post, domainConfig.QueryUrl)
             };
 
@@ -142,14 +142,18 @@ public class InitiatingGatewayService
             responseEnvelope.Body.RegistryResponse.RegistryErrorList.HighestSeverity = SoapExtensions.GetHighestSeverityErrorFromSoapEnvelope(responseEnvelope);
         }
 
-
         // Log potential errors
-        for (int i = 0; i < (responseEnvelope?.Body?.RegistryResponse?.RegistryErrorList?.RegistryError ?? []).Length; i++)
+        var reponseRegistryErrors = (responseEnvelope?.Body?.RegistryResponse?.RegistryErrorList?.RegistryError ?? []);
+        if (reponseRegistryErrors != null && reponseRegistryErrors.Length != 0)
         {
-            var error = responseEnvelope?.Body.RegistryResponse?.RegistryErrorList?.RegistryError[i];
-            if (error == null) continue;
-
-            _logger.LogWarning($"{sessionId}\n#############  Error #{i + 1}  #############\n\tCode: {error.ErrorCode}\n\tCodeContext: {error.CodeContext}\n\tLocation: {error.Location}\n######################################");
+            var sb = new StringBuilder();
+            for (int i = 0; i < reponseRegistryErrors.Length; i++)
+            {
+                var error = responseEnvelope?.Body.RegistryResponse?.RegistryErrorList?.RegistryError[i];
+                if (error == null) continue;
+                sb.AppendLine($"#############  Error #{i + 1}  #############\n\tCode: {error.ErrorCode}\n\tCodeContext: {error.CodeContext}\n\tLocation: {error.Location}\n######################################");
+            }
+            _logger.LogWarning($"{sessionId}\n{sb.ToString()}");
         }
 
         return responseEnvelope;
