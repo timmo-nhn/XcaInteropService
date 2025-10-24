@@ -3,5 +3,6 @@
 public enum PatientResolverType
 {
     IDENTITY,
-    PIX
+    PIX,
+    XCPD
 }
