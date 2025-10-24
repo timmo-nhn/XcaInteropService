@@ -35,6 +35,4 @@
 		<ProjectReference Include="..\XcaInteropService.Source\XcaInteropService.Source.csproj" />
 		<ProjectReference Include="..\XcaInteropService.WebService\XcaInteropService.WebService.csproj" />
 	</ItemGroup>
-
-
 </Project>

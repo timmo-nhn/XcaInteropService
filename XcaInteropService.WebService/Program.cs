@@ -1,6 +1,8 @@
-using System.Collections;
+using Hl7.Fhir.Model.CdsHooks;
 using Microsoft.FeatureManagement;
+using System.Collections;
 using XcaInteropService.Commons.Models.Custom;
+using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Source.Services;
 using XcaInteropService.WebService.Middleware;
 using XcaInteropService.WebService.Services;
@@ -47,7 +49,12 @@ public class Program
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+
+        //builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.DocumentFilter<RemoveExamplesFilter>();
+        });
 
         builder.Services.AddSingleton<TargetCommunitiesService>();
         builder.Services.AddSingleton<TargetCommunitiesWrapper>();
@@ -66,7 +73,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(ui => 
+            {
+                ui.EnableTryItOutByDefault();
+            });
         }
 
         // Log thread and traceid and other stuff

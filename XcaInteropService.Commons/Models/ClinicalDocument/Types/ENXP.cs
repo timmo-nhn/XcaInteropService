@@ -4,13 +4,13 @@ using XcaInteropService.Commons.Models.ClinicalDocument;
 
 namespace XcaInteropService.Commons.Models.ClinicalDocument.Types;
 
+/// <summary>
+/// Entity Name
+/// </summary>
 [Serializable]
 [XmlType(Namespace = Constants.Xds.Namespaces.Hl7V3)]
 public class ENXP : ST
 {
-    [XmlText]
-    public string? Value { get; set; }
-
     [XmlAttribute("partType")]
     public string? PartType { get; set; }
 

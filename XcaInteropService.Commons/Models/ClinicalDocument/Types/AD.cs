@@ -11,7 +11,7 @@ public class AD : ANY
     public string? NullFlavor { get; set; }
 
     [XmlAttribute("use")]
-    public List<string>? Use { get; set; }
+    public string? Use { get; set; }
 
     [XmlElement("delimiter")]
     public List<ADXP>? Delimiter { get; set; }

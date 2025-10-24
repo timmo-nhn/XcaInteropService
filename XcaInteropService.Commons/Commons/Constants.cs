@@ -127,6 +127,11 @@ public static class Constants
             public const string Iti42Reply = "urn:ihe:iti:2007:RegisterDocumentSet-bResponse";
             public const string Iti42ReplyAsync = "urn:ihe:iti:2007:RegisterDocumentSet-bResponseAsync";
 
+            public const string Iti44Action = "urn:hl7-org:v3:PRPA_IN201301UV02";
+            public const string Iti45Action = "urn:hl7-org:v3:PRPA_IN201302UV02";
+            public const string Iti44Reply = "urn:hl7-org:v3:MCCI_IN000002UV01";
+            public const string Iti45Reply = "urn:hl7-org:v3:MCCI_IN000002UV01";
+
             public const string Iti48Action = "urn:ihe:iti:2008:RetrieveValueSet";
             public const string Iti48Reply = "urn:ihe:iti:2008:RetrieveValueSetResponse";
 

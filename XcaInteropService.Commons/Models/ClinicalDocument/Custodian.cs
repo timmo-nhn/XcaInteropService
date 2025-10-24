@@ -12,7 +12,7 @@ public class Custodian
     public string? NullFlavor { get; set; }
 
     [XmlAttribute("typeCode")]
-    public string? TypeCode { get; set; }
+    public string? TypeCode { get; set; } = "CST";
 
     [XmlElement("realmCode")]
     public List<CS>? RealmCode { get; set; }
@@ -22,6 +22,9 @@ public class Custodian
 
     [XmlElement("templateId")]
     public List<II>? TemplateId { get; set; }
+
+    [XmlElement("assignedEntity")]
+    public AssignedEntity AssignedEntity { get; set; }
 
     [XmlElement("assignedCustodian")]
     public AssignedCustodian AssignedCustodian { get; set; }

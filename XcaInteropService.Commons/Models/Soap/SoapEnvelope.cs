@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
+using XcaInteropService.Commons.Models.Hl7.V3;
 using XcaInteropService.Commons.Models.Soap.Actions;
 using XcaInteropService.Commons.Models.Soap.XdsTypes;
 using XcaInteropService.Commons.Serializers;
@@ -18,6 +19,8 @@ namespace XcaInteropService.Commons.Models.Soap;
 [XmlInclude(typeof(RetrieveDocumentSetResponseType))]
 [XmlInclude(typeof(RetrieveDocumentSetbResponse))]
 [XmlInclude(typeof(RetrieveDocumentSetbRequest))]
+[XmlInclude(typeof(PRPA_IN201301UV02_AddNewPatient))]
+[XmlInclude(typeof(MCCI_IN000002UV01_Acknowledgement))]
 [XmlRoot("Envelope", Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
 public class SoapEnvelope
 {
@@ -125,6 +128,18 @@ public partial class SoapBody
 
     [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]
     public RetrieveMultipleValueSetResponse? RetrieveMultipleValueSetsResponse { get; set; }
+    
+    /// <summary>
+    /// ITI-44 request
+    /// </summary>
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Hl7V3)]
+    public PRPA_IN201301UV02_AddNewPatient? PRPA_IN201301UV02 { get; set; }
+
+    /// <summary>
+    /// ITI-44 response
+    /// </summary>
+    [XmlElement(Namespace = Constants.Xds.Namespaces.Hl7V3)]
+    public MCCI_IN000002UV01_Acknowledgement? MCCI_IN000002UV01 { get; set; }
 
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
     public Fault? Fault { get; set; }

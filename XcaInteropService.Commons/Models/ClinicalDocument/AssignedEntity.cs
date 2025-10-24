@@ -32,7 +32,10 @@ public class AssignedEntity
     [XmlElement("assignedPerson")]
     public Person? AssignedPerson { get; set; }
 
+    [XmlElement("assignedOrganization")]
+    public Organization? AssignedOrganization { get; set; }
+
     [XmlElement("representedOrganization")]
-    public Organization? Organization { get; set; }
+    public Organization? RepresentedOrganization { get; set; }
 
 }
