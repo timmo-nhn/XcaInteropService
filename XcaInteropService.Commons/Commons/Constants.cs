@@ -801,4 +801,24 @@ public static class ConstantsExtensions
 
         return constants;
     }
+    public static List<KeyValueEntry> GetAsKeyValuePair(this Type type)
+    {
+        var constants = new List<KeyValueEntry>();
+
+        // Get all static fields of the class
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
+
+        foreach (var field in fields)
+        {
+            var value = (string?)field.GetValue(null);
+
+            // Ensure that the field is a constant (it should be a static readonly or const field)
+            if (field.IsLiteral && !field.IsInitOnly && value != null)
+            {
+                constants = [.. constants, new KeyValueEntry() { Key = field.Name, Value = value }];
+            }
+        }
+
+        return constants;
+    }
 }

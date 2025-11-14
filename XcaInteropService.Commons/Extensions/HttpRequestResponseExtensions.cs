@@ -129,6 +129,7 @@ public static class HttpRequestResponseExtensions
     public static async Task<string> ReadMultipartContentFromRequest(HttpContext httpContext)
     {
         var sb = new StringBuilder();
+
         if (!MediaTypeHeaderValue.TryParse(httpContext.Request.ContentType, out MediaTypeHeaderValue? mediaTypeHeaderValue)
         || !mediaTypeHeaderValue.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
         {
@@ -227,5 +228,9 @@ public static class HttpRequestResponseExtensions
         multipart.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(Constants.MimeTypes.MultipartRelated, Encoding.UTF8.BodyName);
 
         return multipart;
+    }
+
+    public static void SendAsyncResponse(string replyTo, SoapEnvelope responseEnvelope)
+    {
     }
 }

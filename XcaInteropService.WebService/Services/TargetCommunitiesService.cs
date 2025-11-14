@@ -89,7 +89,7 @@ public class TargetCommunitiesService
         
         
         if (theDomain == null)
-        {
+    {
             currentValue = null;
             return false;
         }

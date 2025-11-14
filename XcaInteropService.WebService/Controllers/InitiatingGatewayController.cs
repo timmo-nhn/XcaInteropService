@@ -64,7 +64,7 @@ public class InitiatingGatewayController : ControllerBase
                 foreach (var targetCommunity in domainConfigMap.Domains)
                 {
                     if (!targetCommunity.Enabled) continue;
-                    
+
                     relevantDomains.Domains.Add(targetCommunity);
                     runningTasks.Add(_initiatingGatewayService.CrossGatewayQueryFromTargetCommunity(soapEnvelope, targetCommunity));
                 }
