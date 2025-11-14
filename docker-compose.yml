@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
     environment:
       - ASPNETCORE_URLS=http://+:5000
       - DOTNET_RUNNING_IN_CONTAINER=true
