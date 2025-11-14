@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:hl7="urn:hl7-org:v3" xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+	<s:Header>
+		<a:Action s:mustUnderstand="true">urn:hl7-org:v3:PRPA_IN201301UV02</a:Action>
+		<a:MessageID>16d9806b-887d-4406-9e8c-4990f644008f</a:MessageID>
+		<a:ReplyTo>
+			<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+		</a:ReplyTo>
+		<a:FaultTo>
+			<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+		</a:FaultTo>
+		<a:To>https://pjd-ehs.test.nhn.no:7443/PIXPDQ/services/PIXPDQV3ManagerService</a:To>
+		<o:Security>
+			<u:Timestamp>
+				<u:Created>2025-11-12T10:47:02Z</u:Created>
+				<u:Expires>2025-11-12T11:02:02Z</u:Expires>
+			</u:Timestamp>
+			<saml:Assertion />
+		</o:Security>
+	</s:Header>
+	<s:Body p7:type="PRPA_IN201301UV02_Request" xmlns:p7="http://www.w3.org/2001/XMLSchema-instance">
+		<PRPA_IN201301UV02 ITSVersion="XML_1.0">
+			<hl7:id root="1.1.1.1" extension="53a30b24-981d-4316-8b11-83feda51b5db" />
+			<hl7:creationTime value="20251112114702" />
+			<hl7:interactionId root="2.16.840.1.113883.1.6" extension="PRPA_IN201301UV02" />
+			<hl7:processingCode code="T" />
+			<hl7:processingModeCode code="T" />
+			<hl7:acceptAckCode code="AL" />
+			<hl7:receiver typeCode="RCV">
+				<hl7:device classCode="DEV" determinerCode="INSTANCE">
+					<hl7:id root="2.16.578.1.12.4.1.7.1.2.12.1.1.1.2" />
+					<hl7:asAgent p7:nil="true" />
+				</hl7:device>
+			</hl7:receiver>
+			<hl7:sender typeCode="SND">
+				<hl7:device classCode="DEV" determinerCode="INSTANCE">
+					<hl7:id root="1.1.1.2" />
+					<hl7:asAgent p7:nil="true" />
+				</hl7:device>
+			</hl7:sender>
+			<hl7:controlActProcess classCode="CACT" moodCode="EVN">
+				<hl7:code code="PRPA_TE201301UV02" codeSystem="2.16.840.1.113883.1.6" />
+				<hl7:subject typeCode="SUBJ">
+					<hl7:registrationEvent classCode="REG" moodCode="EVN">
+						<hl7:statusCode code="active" />
+						<hl7:subject1 typeCode="SBJ">
+							<hl7:patient classCode="PAT">
+								<hl7:id root="2.16.578.1.12.4.1.4.1" extension="21825297143" />
+								<hl7:id root="2.16.578.1.12.4.5.100.3.15" extension="c3354ba9-dc75-4438-a868-e1f219b39a3c" />
+								<hl7:statusCode code="active" />
+								<hl7:patientPerson classCode="PSN" determinerCode="INSTANCE">
+									<hl7:name>
+										<hl7:family>PIKE</hl7:family>
+										<hl7:given>PUSLETE</hl7:given>
+									</hl7:name>
+									<hl7:administrativeGenderCode code="U" codeSystem="2.16.840.1.113883.12.1" displayName="Unknown" />
+									<hl7:birthTime value="19520221" />
+									<hl7:birthPlace p7:nil="true" />
+								</hl7:patientPerson>
+								<hl7:providerOrganization classCode="ORG" determinerCode="INSTANCE">
+									<hl7:id root="2.16.578.1.12.4.5.3" />
+									<hl7:name>SyntPop - Norsk helsenett</hl7:name>
+								</hl7:providerOrganization>
+							</hl7:patient>
+						</hl7:subject1>
+						<hl7:author p7:nil="true" />
+						<hl7:custodian typeCode="CST">
+							<hl7:assignedEntity classCode="ASSIGNED">
+								<hl7:id root="2.16.578.1.12.4.1.4.1" />
+								<hl7:assignedOrganization classCode="ORG" determinerCode="INSTANCE">
+									<hl7:name p7:type="hl7:ON">Skatteetaten</hl7:name>
+								</hl7:assignedOrganization>
+								<hl7:representedOrganization p7:nil="true" />
+							</hl7:assignedEntity>
+						</hl7:custodian>
+					</hl7:registrationEvent>
+				</hl7:subject>
+			</hl7:controlActProcess>
+		</PRPA_IN201301UV02>
+	</s:Body>
+</s:Envelope>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+	<soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+		<wsa:Action xmlns:mustUnderstand="http://www.w3.org/2003/05/soap-envelope"
+            mustUnderstand:mustUnderstand="true">urn:hl7-org:v3:MCCI_IN000002UV01</wsa:Action>
+		<wsa:RelatesTo>a438d642-1501-4a78-a118-3e0872f98bfc</wsa:RelatesTo>
+	</soapenv:Header>
+	<soapenv:Body>
+		<ns1:MCCI_IN000002UV01 xmlns:ns1="urn:hl7-org:v3" ITSVersion="XML_1.0">
+			<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns1:II"
+                root="1.2.3.4.5" extension="1762944544568.3383" />
+			<ns1:creationTime xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:type="ns1:TS" value="20251112114904" />
+			<ns1:versionCode code="V3PR1" />
+			<ns1:interactionId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:type="ns1:II" root="2.16.840.1.113883" extension="MCCI_IN000002UV01" />
+			<ns1:processingCode code="P" />
+			<ns1:processingModeCode code="T" />
+			<ns1:acceptAckCode code="NE" />
+			<ns1:receiver typeCode="RCV">
+				<ns1:device classCode="DEV" determinerCode="INSTANCE">
+					<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns1:II"
+                        root="1.1.1.2" />
+					<ns1:asAgent classCode="AGNT">
+						<ns1:representedOrganization classCode="ORG" determinerCode="INSTANCE">
+							<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                xsi:type="ns1:II" root="1.1.1.2" />
+						</ns1:representedOrganization>
+					</ns1:asAgent>
+				</ns1:device>
+			</ns1:receiver>
+			<ns1:sender typeCode="SND">
+				<ns1:device classCode="DEV" determinerCode="INSTANCE">
+					<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns1:II"
+                        root="2.16.578.1.12.4.1.7.1.2.12.1.1.1.2" />
+					<ns1:asAgent classCode="AGNT">
+						<ns1:representedOrganization classCode="ORG" determinerCode="INSTANCE">
+							<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                xsi:type="ns1:II" root="2.16.578.1.12.4.1.7.1.2.12.1.1.1.2" />
+						</ns1:representedOrganization>
+					</ns1:asAgent>
+				</ns1:device>
+			</ns1:sender>
+			<ns1:acknowledgement>
+				<ns1:typeCode code="CA" />
+				<ns1:targetMessage>
+					<ns1:id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns1:II"
+                        root="1.1.1.1" extension="85ece074-c6b9-4129-b63d-c947069ae673" />
+				</ns1:targetMessage>
+			</ns1:acknowledgement>
+		</ns1:MCCI_IN000002UV01>
+	</soapenv:Body>
+</soapenv:Envelope>
