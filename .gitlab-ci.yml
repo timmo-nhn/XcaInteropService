@@ -10,8 +10,8 @@ variables:
 
 build image and push to harbor:
   variables:
-    SRC_FOLDER: "XcaInteropService.WebService"
-    CONTEXT_FOLDER: "."
+    SRC_FOLDER: ""
+    CONTEXT_FOLDER: "XcaInteropService.WebService"
     NHN_DEFAULT_FILTER_EXTRA_PATH: ".gitlab-ci.yml"
     DOCKERFILE: "Dockerfile"
   extends:
