@@ -11,7 +11,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./XcaXds.Source/Data:/mnt/Data
+      - ./XcaInteropService.Source/Data:/mnt/Data
     networks:
       - xcanet
 
