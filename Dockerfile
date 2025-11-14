@@ -6,7 +6,7 @@ COPY . .
 RUN dotnet restore XcaInteropService.WebService/XcaInteropService.WebService.csproj
 RUN dotnet publish XcaInteropService.WebService/XcaInteropService.WebService.csproj -c Release -o /app
 
-COPY XcaInteropService.Source/Data /app/registry
+COPY XcaInteropService.Source/Data /app/Data
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 
