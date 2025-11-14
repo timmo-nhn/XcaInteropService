@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PATIENTIDENTITYREGISTRY_FILE_PATH=/mnt/Data/PatientIdentityRegistry
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./XcaXds.Source/Data:/mnt/Data
+    networks:
+      - xcanet
+
+networks:
+  xcanet:

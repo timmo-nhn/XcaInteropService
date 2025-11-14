@@ -16,7 +16,7 @@ public static class DatabasePathFinder
         else
         {
             string baseDirectory = AppContext.BaseDirectory;
-            databasePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "XcaInteropService.Source", "PatientIdentityRegistry");
+            databasePath = Path.Combine(baseDirectory, "..", "..", "..", "..", "XcaInteropService.Source","Data", "PatientIdentityRegistry");
         }
         databasePath = Path.GetFullPath(databasePath); // resolve ".."
 
