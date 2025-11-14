@@ -9,7 +9,7 @@ namespace XcaXds.Source.Source;
 
 public class SqliteRegistryDbContext : DbContext
 {
-    public DbSet<DbPatientIdentityDto> PatientIdentityDtos => Set<DbPatientIdentityDto>();
+    public DbSet<DbPatientIdentityDto> PatientIdentityList => Set<DbPatientIdentityDto>();
 
     private readonly string _dbPath;
 
