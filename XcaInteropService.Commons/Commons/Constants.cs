@@ -143,6 +143,9 @@ public static class Constants
             public const string Iti62Reply = "urn:ihe:iti:2010:DeleteDocumentSetResponse";
             public const string Iti62ReplyAsync = "urn:ihe:iti:2010:DeleteDocumentSetResponseAsync";
 
+            public const string Iti80Action = "urn:ihe:iti:2015:CrossGatewayDocumentProvide";
+            public const string Iti80Reply = "urn:ihe:iti:2015:CrossGatewayDocumentProvideResponse";
+
             public const string Iti86Action = "urn:ihe:iti:2017:RemoveDocuments";
             public const string Iti86ActionAsync = "urn:ihe:iti:2017:RemoveDocumentsAsync";
             public const string Iti86Reply = "urn:ihe:iti:2017:RemoveDocumentsResponse";

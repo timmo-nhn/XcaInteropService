@@ -10,14 +10,14 @@ namespace XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 public class CFRegistrationEvent : Act
 {
     [XmlAttribute("classCode")]
-    public string? ClassCode { get; set; } = "REG";
+    public string ClassCode { get; set; } = "REG";
 
     [XmlAttribute("moodCode")]
-    public string? MoodCode { get; set; } = "EVN";
+    public string MoodCode { get; set; } = "EVN";
 
     [XmlElement("subject1")]
-    public CFSubject1 Subject1 { get; set; }   
+    public CFSubject1? Subject1 { get; set; }   
 
     [XmlElement("custodian")]
-    public Custodian Custodian { get; set; }   
+    public Custodian? Custodian { get; set; }   
 }

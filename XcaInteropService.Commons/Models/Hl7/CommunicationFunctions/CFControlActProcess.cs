@@ -8,11 +8,11 @@ namespace XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 public class CFControlActProcess
 {
     [XmlAttribute("classCode")]
-    public string ClassCode { get; set; } = "CACT";
+    public string? ClassCode { get; set; } = "CACT";
     
     [XmlAttribute("moodCode")]
-    public string MoodCode { get; set; } = "EVN";
+    public string? MoodCode { get; set; } = "EVN";
 
     [XmlElement("subject")]
-    public CFSubject Subject { get; set; }
+    public CFSubject? Subject { get; set; }
 }

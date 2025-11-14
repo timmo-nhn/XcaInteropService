@@ -8,11 +8,11 @@ namespace XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 public class CFSubject
 {
     [XmlAttribute("realmCode")]
-    public string RealmCode { get; set; }
+    public string? RealmCode { get; set; }
 
     [XmlAttribute("typeCode")]
-    public string TypeCode { get; set; } = "SBJ";
+    public string? TypeCode { get; set; } = "SBJ";
 
     [XmlElement("registrationEvent")]
-    public CFRegistrationEvent RegistrationEvent { get; set; }
+    public CFRegistrationEvent? RegistrationEvent { get; set; }
 }

@@ -12,5 +12,5 @@ public class CFSubject1
     public string? TypeCode { get; set; }
 
     [XmlElement("patient")]
-    public CFPatient Patient { get; set; }
+    public CFPatient? Patient { get; set; }
 }

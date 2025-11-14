@@ -15,11 +15,11 @@ public class CFPatient
     public List<II>? Id { get; set; }
 
     [XmlElement("statusCode")]
-    public CE StatusCode { get; set; }
+    public CE? StatusCode { get; set; }
 
     [XmlElement("patientPerson")]
-    public CFPatientPerson Patient { get; set; }
+    public CFPatientPerson? Patient { get; set; }
 
     [XmlElement("providerOrganization")]
-    public CFProviderOrganization ProviderOrganization { get; set; }
+    public CFProviderOrganization? ProviderOrganization { get; set; }
 }

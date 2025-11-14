@@ -24,8 +24,8 @@ public class Custodian
     public List<II>? TemplateId { get; set; }
 
     [XmlElement("assignedEntity")]
-    public AssignedEntity AssignedEntity { get; set; }
+    public AssignedEntity? AssignedEntity { get; set; }
 
     [XmlElement("assignedCustodian")]
-    public AssignedCustodian AssignedCustodian { get; set; }
+    public AssignedCustodian? AssignedCustodian { get; set; }
 }

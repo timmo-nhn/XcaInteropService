@@ -94,8 +94,10 @@ public class InitiatingGatewayController : ControllerBase
 
                 responseEnvelope = await _initiatingGatewayService.CrossGatewayRetrieveFromTargetCommunity(soapEnvelope, Request.HttpContext.TraceIdentifier, domainConfigMap);
 
-                responseEnvelope.Header = new();
-                responseEnvelope.Header.Action = soapEnvelope.GetCorrespondingResponseAction();
+                responseEnvelope.Header = new()
+                {
+                    Action = soapEnvelope.GetCorrespondingResponseAction()
+                };
 
                 var multipartResponse = HttpRequestResponseExtensions.ConvertToMultipartMessage(responseEnvelope, out var boundary);
 

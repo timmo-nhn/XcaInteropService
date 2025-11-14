@@ -1,4 +1,5 @@
 using Hl7.Fhir.Model.CdsHooks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.FeatureManagement;
 using System.Collections;
 using XcaInteropService.Commons.Models.Custom;
@@ -7,6 +8,7 @@ using XcaInteropService.Source.Services;
 using XcaInteropService.WebService.Middleware;
 using XcaInteropService.WebService.Services;
 using XcaInteropService.WebService.Startup;
+using XcaXds.Source.Source;
 
 namespace XcaInteropService.WebService;
 
@@ -59,10 +61,16 @@ public class Program
         builder.Services.AddSingleton<TargetCommunitiesService>();
         builder.Services.AddSingleton<TargetCommunitiesWrapper>();
         builder.Services.AddSingleton<InitiatingGatewayService>();
+        builder.Services.AddSingleton<PatientDemographicsService>();
+        builder.Services.AddSingleton<PatientDemographicsWrapper>();
         builder.Services.AddSingleton<ValueSetRepositoryService>();
         builder.Services.AddSingleton<ValueSetRepositoryWrapper>();
 
         builder.Services.AddHttpClient();
+
+        // Database context
+        builder.Services.AddDbContextFactory<SqliteRegistryDbContext>(options =>
+            options.UseSqlite($"Data Source=\"{DatabasePathFinder.FindDatabasePath()}\""));
 
         // Feature Toggle (located in XcaXds.WebService/appsettings.json)
         builder.Services.AddFeatureManagement();
@@ -75,7 +83,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(ui => 
             {
-                ui.EnableTryItOutByDefault();
+                //ui.EnableTryItOutByDefault();
             });
         }
 

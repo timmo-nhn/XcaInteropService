@@ -11,5 +11,5 @@ public class CFSender
     public string TypeCode { get; set; } = "SND";
 
     [XmlElement("device")]
-    public CFDevice Device { get; set; }
+    public CFDevice? Device { get; set; }
 }

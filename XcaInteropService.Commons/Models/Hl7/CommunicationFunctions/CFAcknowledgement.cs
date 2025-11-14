@@ -15,5 +15,5 @@ public class CFAcknowledgement
     public List<II>? Id { get; set; }
 
     [XmlElement("acknowledgementDetail")]
-    public CFAcknowledgementDetail AcknowledgementDetail { get; set; }
+    public CFAcknowledgementDetail? AcknowledgementDetail { get; set; }
 }

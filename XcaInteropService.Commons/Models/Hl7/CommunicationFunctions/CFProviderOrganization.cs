@@ -18,8 +18,8 @@ public class CFProviderOrganization
     public List<II>? Id { get; set; }
 
     [XmlElement("name")]
-    public ENXP Name { get; set; }
+    public ENXP? Name { get; set; }
 
     [XmlElement("contactParty")]
-    public CFContactParty ContactParty { get; set; }
+    public CFContactParty? ContactParty { get; set; }
 }

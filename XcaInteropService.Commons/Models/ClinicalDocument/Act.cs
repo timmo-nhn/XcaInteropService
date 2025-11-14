@@ -30,7 +30,7 @@ public class Act : EntryItemBase
     public List<II>? Id { get; set; }
 
     [XmlElement("code")]
-    public CD Code { get; set; }
+    public CD? Code { get; set; }
 
     [XmlIgnore]
     private bool? _negationInd;
