@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using XcaInteropService.Commons.Commons;
+﻿using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.ClinicalDocument.Types;
 using XcaInteropService.Commons.Models.Custom.PatientIdentityDtos;
 using XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
@@ -14,34 +13,39 @@ public static class PatientIdentityTransformerService
     {
         var patientIdentity = new PatientIdentityDto();
 
-        var patient = addPatientRequest?.ControlActProcess?.Subject?.RegistrationEvent?.Subject1?.Patient?.Patient;
-        if (patient == null) return null;
-        
+        var subject = addPatientRequest?.ControlActProcess?.Subject?.RegistrationEvent?.Subject1;
+        if (subject == null) return null;
+
         patientIdentity.Id = Guid.NewGuid().ToString();
-        patientIdentity.Name = GetXpnPatientNameFromAddPatientPatient(patient);
-        patientIdentity.Identifier = GetCxPatientIdFromPatient(patient);
-        patientIdentity.BirthTime = patient.BirthTime?.EffectiveTime.Date;
-        patientIdentity.DeceasedTime = patient.sdtcDeceasedTime?.EffectiveTime.Date;
-        patientIdentity.GenderCode = GetCeGenderFromPatient(patient);
-        patientIdentity.AlternateIdentifiers = GetAlternateIdentifiersFromPatient(patient);
+        patientIdentity.Name = GetXpnPatientNameFromAddPatientPatient(subject.Patient?.Patient);
+
+        var identifiers = GetCxPatientIdFromPatient(subject.Patient);
+        patientIdentity.Identifier = identifiers?.FirstOrDefault();
+        patientIdentity.BirthTime = subject.Patient?.Patient?.BirthTime?.EffectiveTime.Date;
+        patientIdentity.DeceasedTime = subject.Patient?.Patient?.sdtcDeceasedTime?.EffectiveTime.Date;
+        patientIdentity.GenderCode = GetCeGenderFromPatient(subject?.Patient?.Patient);
+
+        patientIdentity.AlternateIdentifiers ??= new();
+        patientIdentity.AlternateIdentifiers.AddRange(GetAlternateIdentifiersFromPatient(subject?.Patient?.Patient) ?? []);
+        patientIdentity.AlternateIdentifiers.AddRange(identifiers?.Skip(1) ?? []);
 
         return patientIdentity;
     }
 
-    private static List<CX>? GetAlternateIdentifiersFromPatient(CFPatientPerson patient)
+    private static List<CX>? GetAlternateIdentifiersFromPatient(CFPatientPerson? patient)
     {
         var identifiers = new List<CX>();
 
-        foreach (var alternateId in patient.asOtherIds)
+        foreach (var alternateId in patient?.asOtherIds ?? [])
         {
             var id = alternateId.Id?.FirstOrDefault();
             identifiers.Add(new CX()
             {
-                IdNumber = id.Extension,
+                IdNumber = id?.Extension,
                 AssigningAuthority = new HD()
                 {
-                    UniversalId = id.Root,
-                    UniversalIdType = alternateId.ScopingOrganization?.Id?.FirstOrDefault()?.Root ?? Constants.Hl7.UniversalIdType.Iso,
+                    UniversalId = id?.Root,
+                    UniversalIdType = alternateId?.ScopingOrganization?.Id?.FirstOrDefault()?.Root ?? Constants.Hl7.UniversalIdType.Iso,
                 }
             });
         }
@@ -49,22 +53,21 @@ public static class PatientIdentityTransformerService
         return identifiers;
     }
 
-    private static CE? GetCeGenderFromPatient(CFPatientPerson patient)
+    private static CE? GetCeGenderFromPatient(CFPatientPerson? patient)
     {
-        return patient.AdministrativeGenderCode;
+        return patient?.AdministrativeGenderCode;
     }
 
-    private static CX? GetCxPatientIdFromPatient(CFPatientPerson patient)
+    private static List<CX>? GetCxPatientIdFromPatient(CFPatient? patient)
     {
-        return new CX()
+        return patient?.Id?.Select(pid => new CX()
         {
-            IdNumber = patient.Id?.Extension,
+            IdNumber = pid.Extension,
             AssigningAuthority = new HD()
             {
-                UniversalId = patient.Id?.Root,
-                UniversalIdType = Constants.Hl7.UniversalIdType.Iso
+                UniversalId = pid.Root
             }
-        };
+        }).ToList();
     }
 
     private static XPN? GetXpnPatientNameFromAddPatientPatient(CFPatientPerson? patient)
@@ -74,8 +77,8 @@ public static class PatientIdentityTransformerService
 
         return new XPN()
         {
-            GivenName = string.Join(" ", name.Family ?? []),
-            FamilyName = string.Join(" ", name.Given ?? [])
+            GivenName = string.Join(" ", name.Given?.Select(fam => fam.Value) ?? []),
+            FamilyName = string.Join(" ", name.Family?.Select(giv => giv.Value) ?? [])
         };
     }
 }

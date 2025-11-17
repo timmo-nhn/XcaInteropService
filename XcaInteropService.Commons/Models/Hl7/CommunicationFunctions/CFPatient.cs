@@ -8,18 +8,18 @@ namespace XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 [XmlType("cfPatient", Namespace = Constants.Xds.Namespaces.Hl7V3)]
 public class CFPatient
 {
-    [XmlAttribute("classCode")]
+    [XmlAttribute("classCode", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public string? ClassCode { get; set; }
 
-    [XmlElement("id")]
+    [XmlElement("id", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public List<II>? Id { get; set; }
 
-    [XmlElement("statusCode")]
+    [XmlElement("statusCode", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CE? StatusCode { get; set; }
 
-    [XmlElement("patientPerson")]
+    [XmlElement("patientPerson", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CFPatientPerson? Patient { get; set; }
 
-    [XmlElement("providerOrganization")]
+    [XmlElement("providerOrganization", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CFProviderOrganization? ProviderOrganization { get; set; }
 }

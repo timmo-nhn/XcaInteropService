@@ -6,6 +6,7 @@ using XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 namespace XcaInteropService.Commons.Models.Hl7.V3;
 
 [Serializable]
+[XmlType("MCCI_IN000002UV01", Namespace = Constants.Xds.Namespaces.Hl7V3)]
 [XmlRoot("MCCI_IN000002UV01", Namespace = Constants.Xds.Namespaces.Hl7V3)]
 public class MCCI_IN000002UV01_Acknowledgement
 {

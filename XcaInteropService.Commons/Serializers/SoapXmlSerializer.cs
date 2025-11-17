@@ -67,6 +67,7 @@ public class SoapXmlSerializer
             namespaceManager.AddNamespace("lcm", Constants.Soap.Namespaces.Lcm);
             namespaceManager.AddNamespace("rim", Constants.Soap.Namespaces.Rim);
             namespaceManager.AddNamespace("svs", Constants.Soap.Namespaces.Svs);
+            namespaceManager.AddNamespace("hl7", Constants.Soap.Namespaces.Hl7V3);
 
             var bodyElement = xmlDoc.SelectSingleNode("//s:Body", namespaceManager);
 
@@ -76,10 +77,7 @@ public class SoapXmlSerializer
                 bodyElement = xmlDoc.SelectSingleNode("//Body");
             }
 
-            if (bodyElement != null && bodyElement.Attributes?["type", "http://www.w3.org/2001/XMLSchema-instance"] != null)
-            {
-                bodyElement.Attributes.RemoveNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance");
-            }
+            bodyElement?.Attributes?.RemoveNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance");
 
             var modifiedXmlContent = xmlDoc.OuterXml;
 

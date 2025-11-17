@@ -22,8 +22,7 @@ public class PatientDemographicsService
 
         var patientDto = PatientIdentityTransformerService.TransformAddPatientToPatientDto(addPatientRequest);
 
-        _patientDemographicsWrapper.UpdateRegistry([patientDto]);
-
+        _patientDemographicsWrapper.UpdatePatientDemographics([patientDto]);
 
         return responseEnvelope;
     }

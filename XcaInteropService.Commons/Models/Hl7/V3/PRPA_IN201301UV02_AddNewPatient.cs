@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Xml;
+using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.ClinicalDocument.Types;
 using XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
@@ -6,33 +7,37 @@ using XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
 namespace XcaInteropService.Commons.Models.Hl7.V3;
 
 [Serializable]
+[XmlType("PRPA_IN201301UV02", Namespace = Constants.Xds.Namespaces.Hl7V3)]
 [XmlRoot("PRPA_IN201301UV02", Namespace = Constants.Xds.Namespaces.Hl7V3)]
 public class PRPA_IN201301UV02_AddNewPatient
 {
-    [XmlElement("id")]
+    [XmlAttribute("ITSVersion", Namespace = Constants.Xds.Namespaces.Hl7V3)]
+    public string? ItsVersion { get; set; }
+
+    [XmlElement("id", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public II? Id { get; set; }
 
-    [XmlElement("creationTime")]
+    [XmlElement("creationTime", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public TS? CreationTime { get; set; }
 
-    [XmlElement("interactionId")]
+    [XmlElement("interactionId", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public II? InteractionId { get; set; }
 
-    [XmlElement("processingCode")]
+    [XmlElement("processingCode", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CD? ProcessingCode { get; set; }
 
-    [XmlElement("processingModeCode")]
+    [XmlElement("processingModeCode", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CD? ProcessingModeCode { get; set; }
 
-    [XmlElement("acceptAckCode")]
+    [XmlElement("acceptAckCode", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CD? AcceptAckCode { get; set; }
 
-    [XmlElement("receiver")]
+    [XmlElement("receiver", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CFReceiver? Receiver { get; set; }
 
-    [XmlElement("sender")]
+    [XmlElement("sender", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CFSender? Sender { get; set; }
 
-    [XmlElement("controlActProcess")]
+    [XmlElement("controlActProcess", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public CFControlActProcess? ControlActProcess { get; set; }
 }

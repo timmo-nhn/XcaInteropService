@@ -23,7 +23,7 @@ public class PatientDemographicsController : Controller
 
     [Consumes("application/soap+xml")]
     [Produces("application/soap+xml")]
-    [HttpPost("PIXPDQManagerService")]
+    [HttpPost("PIXPDQV3ManagerService")]
     public IActionResult HandlePixRequest([FromBody] SoapEnvelope soapEnvelope)
     {
         var responseEnvelope = new SoapEnvelope();
@@ -37,7 +37,7 @@ public class PatientDemographicsController : Controller
         switch (action)
         {
             case Constants.Xds.OperationContract.Iti44Action:
-                var addPatientResponse = _patientDemographicsService.UploadPatientIdentity(soapEnvelope);
+               var addPatientResponse = _patientDemographicsService.UploadPatientIdentity(soapEnvelope);
                 break;
 
             default:

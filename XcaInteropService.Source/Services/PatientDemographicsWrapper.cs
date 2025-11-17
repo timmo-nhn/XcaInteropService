@@ -31,24 +31,24 @@ public class PatientDemographicsWrapper
         context.Database.EnsureCreated();
     }
 
-    public IEnumerable<DbPatientIdentityDto> ReadRegistry()
+    public IEnumerable<PatientIdentityDto?> ReadPatientDemographics()
     {
         using var db = _contextFactory.CreateDbContext();
-        return db.PatientIdentityList.AsNoTracking();
+        foreach (var entity in db.PatientIdentityList.AsNoTracking())
+        {
+            yield return DatabaseMapper.MapFromDatabaseEntityToDto(entity);
+        }
     }
 
-    public bool UpdateRegistry(List<PatientIdentityDto> dtos)
+    public bool UpdatePatientDemographics(List<PatientIdentityDto?>? dtos)
     {
         using var db = _contextFactory.CreateDbContext();
 
         db.ChangeTracker.AutoDetectChangesEnabled = false;
 
-        using var transaction = db.Database.BeginTransaction();
-
-        //db.PatientIdentityList.AddRange(dtos);
+        var dbEntities = DatabaseMapper.MapFromDtoToDatabaseEntity(dtos);
+        db.PatientIdentityList.AddRange(dbEntities);
         db.SaveChanges();
-
         return true;
-
     }
 }

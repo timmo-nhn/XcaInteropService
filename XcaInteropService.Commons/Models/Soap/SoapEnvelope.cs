@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.ServiceModel;
+using System.Xml;
 using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.Hl7.V3;
@@ -10,17 +11,6 @@ namespace XcaInteropService.Commons.Models.Soap;
 
 [Serializable]
 [XmlType(AnonymousType = true, Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
-[XmlInclude(typeof(RegistryStoredQueryRequest))]
-[XmlInclude(typeof(ProvideAndRegisterDocumentSetbRequest))]
-[XmlInclude(typeof(RegisterDocumentSetbRequest))]
-[XmlInclude(typeof(SubmitObjectsRequest))]
-[XmlInclude(typeof(IdentifiableType))]
-[XmlInclude(typeof(RegistryResponseType))]
-[XmlInclude(typeof(RetrieveDocumentSetResponseType))]
-[XmlInclude(typeof(RetrieveDocumentSetbResponse))]
-[XmlInclude(typeof(RetrieveDocumentSetbRequest))]
-[XmlInclude(typeof(PRPA_IN201301UV02_AddNewPatient))]
-[XmlInclude(typeof(MCCI_IN000002UV01_Acknowledgement))]
 [XmlRoot("Envelope", Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
 public class SoapEnvelope
 {
@@ -81,8 +71,20 @@ public class SoapEnvelope
 }
 
 [Serializable]
+[XmlInclude(typeof(RegistryStoredQueryRequest))]
+[XmlInclude(typeof(ProvideAndRegisterDocumentSetbRequest))]
+[XmlInclude(typeof(RegisterDocumentSetbRequest))]
+[XmlInclude(typeof(SubmitObjectsRequest))]
+[XmlInclude(typeof(IdentifiableType))]
+[XmlInclude(typeof(RegistryResponseType))]
+[XmlInclude(typeof(RetrieveDocumentSetResponseType))]
+[XmlInclude(typeof(RetrieveDocumentSetbResponse))]
+[XmlInclude(typeof(RetrieveDocumentSetbRequest))]
+[XmlInclude(typeof(PRPA_IN201301UV02_AddNewPatient))]
+[XmlInclude(typeof(MCCI_IN000002UV01_Acknowledgement))]
 [XmlType(AnonymousType = true, Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
-public partial class SoapBody
+[XmlRoot("Body", Namespace = "http://www.w3.org/2003/05/soap-envelope")]
+public class SoapBody
 {
     [SoapAttribute("type", Namespace = Constants.Soap.Namespaces.Xsi)]
     public string? XsiType { get; set; }
@@ -128,17 +130,17 @@ public partial class SoapBody
 
     [XmlElement(Namespace = Constants.Xds.Namespaces.Svs)]
     public RetrieveMultipleValueSetResponse? RetrieveMultipleValueSetsResponse { get; set; }
-    
+
     /// <summary>
     /// ITI-44 request
     /// </summary>
-    [XmlElement(Namespace = Constants.Xds.Namespaces.Hl7V3)]
+    [XmlElement("PRPA_IN201301UV02", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public PRPA_IN201301UV02_AddNewPatient? PRPA_IN201301UV02 { get; set; }
 
     /// <summary>
     /// ITI-44 response
     /// </summary>
-    [XmlElement(Namespace = Constants.Xds.Namespaces.Hl7V3)]
+    [XmlElement("MCCI_IN000002UV01", Namespace = Constants.Xds.Namespaces.Hl7V3)]
     public MCCI_IN000002UV01_Acknowledgement? MCCI_IN000002UV01 { get; set; }
 
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
