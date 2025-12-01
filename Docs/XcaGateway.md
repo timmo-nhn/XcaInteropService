@@ -1,9 +1,9 @@
 # XCA Initiating Gateway
 An XCA Initiating Gateway accepts requests from a document consumer wishing to retrieve either document metadata or documents. The Initiating Gateway has a **Domain Config**, which defines a set of endpoints to query to retrieve metadata or documents. In IHE terminology, these are called **Affinity Domains** or **Communities**.
 
-## Preface: Initiating and Responding Gateways
+## Initiating and Responding Gateways
 The Initiating Gateway is an actor that receives an initial request, and forwards it to all known Responding Gateways.  
-Initiating Gateways send requests to Responding gateways. To know which Responding Gateways to call, a Config Map is used.
+Initiating Gateways send requests to Responding gateways. To know which Responding Gateways to call, a **Domain Config Map** is used.
 ```mermaid
 flowchart
 
@@ -19,3 +19,6 @@ ig <--> rg3
 ig <--> rg4
 
 ```
+
+>**🚩 National Extension** <br> The Norwegian usage of IHE XCA infrastructure is set up with a single Initiating Gateway that queries multiple Responding Gateways.
+

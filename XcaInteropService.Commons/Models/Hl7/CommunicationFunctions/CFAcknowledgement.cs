@@ -12,7 +12,7 @@ public class CFAcknowledgement
     public string? TypeCode { get; set; }
 
     [XmlElement("targetMessage")]
-    public List<II>? Id { get; set; }
+    public List<II>? TargetMessage { get; set; }
 
     [XmlElement("acknowledgementDetail")]
     public CFAcknowledgementDetail? AcknowledgementDetail { get; set; }

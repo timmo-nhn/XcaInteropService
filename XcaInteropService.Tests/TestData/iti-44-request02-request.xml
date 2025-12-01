@@ -49,7 +49,7 @@
                                 <hl7:patientPerson classCode="PSN" determinerCode="INSTANCE">
                                     <hl7:name>
                                         <hl7:family>PIKE</hl7:family>
-                                        <hl7:given>PUSLETE</hl7:given>
+                                        <hl7:given>HIBB</hl7:given>
                                     </hl7:name>
                                     <hl7:administrativeGenderCode code="U" codeSystem="2.16.840.1.113883.12.1" displayName="Unknown" />
                                     <hl7:birthTime value="19520221" />

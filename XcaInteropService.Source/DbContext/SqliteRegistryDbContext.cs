@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection;
-using XcaInteropService.Commons.Models.Custom.PatientIdentityDtos;
 using XcaInteropService.Source.Models.DatabaseDtos;
-using static Hl7.Fhir.Model.Group;
 
 namespace XcaXds.Source.Source;
 
@@ -28,11 +24,8 @@ public class SqliteRegistryDbContext : DbContext
         patient.OwnsMany(p => p.AlternatePatientIdentifiers, a =>
         {
             a.WithOwner().HasForeignKey("PatientIdentityId");
-
             a.ToTable("PatientIdentity_AlternateIdentifiers");
-
-            a.Property<int>("Id")
-                .ValueGeneratedOnAdd();
+            a.Property(x => x.Id).ValueGeneratedOnAdd();
         });
     }
 }

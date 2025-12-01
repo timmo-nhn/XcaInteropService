@@ -38,6 +38,10 @@ public class PatientDemographicsController : Controller
         {
             case Constants.Xds.OperationContract.Iti44Action:
                var addPatientResponse = _patientDemographicsService.UploadPatientIdentity(soapEnvelope);
+
+                responseEnvelope.SetAction(Constants.Xds.OperationContract.Iti44Reply);
+                responseEnvelope.Header.RelatesTo = soapEnvelope.Header.MessageId;
+                responseEnvelope.Body.MCCI_IN000002UV01 = addPatientResponse;
                 break;
 
             default:

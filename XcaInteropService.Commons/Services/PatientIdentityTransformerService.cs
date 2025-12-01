@@ -9,7 +9,7 @@ namespace XcaInteropService.Commons.Services;
 
 public static class PatientIdentityTransformerService
 {
-    public static PatientIdentityDto? TransformAddPatientToPatientDto(PRPA_IN201301UV02_AddNewPatient? addPatientRequest)
+    public static PatientIdentityDto? TransformAddPatientToPatientDto(PRPA_IN201301UV02? addPatientRequest)
     {
         var patientIdentity = new PatientIdentityDto();
 

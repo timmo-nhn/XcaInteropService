@@ -1,6 +1,4 @@
-﻿using XcaInteropService.Commons.Models.Custom.RegistryDtos;
-using XcaInteropService.Commons.Models.Hl7.DataType;
-using XcaXds.Source.Models.DatabaseDtos.Types;
+﻿using XcaXds.Source.Models.DatabaseDtos.Types;
 
 namespace XcaInteropService.Source.Models.DatabaseDtos;
 
@@ -12,8 +10,8 @@ public class DbPatientIdentityDto
     public string? GenderCode { get; set; }
     public string? GenderCodeSystem { get; set; }
     public string? GenderDisplayName { get; set; }
-    public DateTime? BirthTime {  get; set; }
-    public DateTime? DeceasedTime {  get; set; }
+    public DateTime? BirthTime { get; set; }
+    public DateTime? DeceasedTime { get; set; }
     public string? IdentifierCode { get; set; }
     public string? IdentifierCodeSystem { get; set; }
     public string? IdentifierCodeSystemAuthority { get; set; }

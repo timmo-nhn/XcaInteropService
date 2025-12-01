@@ -16,10 +16,10 @@ public class UnitTests_Functionalities
         var iti44ResponseAck = File.ReadAllText(files.FirstOrDefault(f => f.Contains("iti44-request-ack.xml")));
 
         var sxmls = new SoapXmlSerializer();
-        var iti44 = sxmls.DeserializeXmlString<PRPA_IN201301UV02_AddNewPatient>(iti44Request);
+        var iti44 = sxmls.DeserializeXmlString<PRPA_IN201301UV02>(iti44Request);
         var iti44StringAgain = sxmls.SerializeToXmlString(iti44).Content;
 
-        var iti44Ack = sxmls.DeserializeXmlString<MCCI_IN000002UV01_Acknowledgement>(iti44ResponseAck);
+        var iti44Ack = sxmls.DeserializeXmlString<MCCI_IN000002UV01>(iti44ResponseAck);
         var iti44AckStringAgain = sxmls.SerializeToXmlString(iti44Ack).Content;
     }
 }

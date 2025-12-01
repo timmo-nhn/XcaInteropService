@@ -1,4 +1,5 @@
-﻿using XcaInteropService.Commons.Models.Soap;
+﻿using XcaInteropService.Commons.Models.Hl7.V3;
+using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Services;
 using XcaInteropService.Source.Services;
 
@@ -15,15 +16,48 @@ public class PatientDemographicsService
         _patientDemographicsWrapper = patientDemographicsWrapper;
     }
 
-    public SoapEnvelope UploadPatientIdentity(SoapEnvelope soapEnvelope)
+    public MCCI_IN000002UV01 UploadPatientIdentity(SoapEnvelope soapEnvelope)
     {
-        var responseEnvelope = new SoapEnvelope();
         var addPatientRequest = soapEnvelope.Body.PRPA_IN201301UV02;
 
         var patientDto = PatientIdentityTransformerService.TransformAddPatientToPatientDto(addPatientRequest);
 
         _patientDemographicsWrapper.UpdatePatientDemographics([patientDto]);
 
-        return responseEnvelope;
+        return new MCCI_IN000002UV01()
+        {
+            Acknowledgement = new()
+            {
+                TargetMessage = [addPatientRequest.Id]
+            },
+            Sender = new()
+            {
+                Device = new()
+                {
+                    Id = addPatientRequest.Receiver?.Device.Id,
+                    AsAgent = new()
+                    {
+                        RepresentedOrganization = new()
+                        {
+                            Id = addPatientRequest.Receiver?.Device.Id
+                        }
+                    }
+                }
+            },
+            Receiver = new()
+            {
+                Device = new()
+                {
+                    Id = addPatientRequest.Sender?.Device?.Id,
+                    AsAgent = new()
+                    {
+                        RepresentedOrganization = new()
+                        {
+                            Id = addPatientRequest.Sender?.Device?.Id
+                        }
+                    }
+                }
+            }
+        };
     }
 }

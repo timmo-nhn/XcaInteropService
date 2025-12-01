@@ -14,6 +14,12 @@ namespace XcaInteropService.Commons.Models.Soap;
 [XmlRoot("Envelope", Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
 public class SoapEnvelope
 {
+    public SoapEnvelope()
+    {
+        Header = new();
+        Body = new();
+    }
+
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
     public SoapHeader Header { get; set; }
 
@@ -80,8 +86,8 @@ public class SoapEnvelope
 [XmlInclude(typeof(RetrieveDocumentSetResponseType))]
 [XmlInclude(typeof(RetrieveDocumentSetbResponse))]
 [XmlInclude(typeof(RetrieveDocumentSetbRequest))]
-[XmlInclude(typeof(PRPA_IN201301UV02_AddNewPatient))]
-[XmlInclude(typeof(MCCI_IN000002UV01_Acknowledgement))]
+[XmlInclude(typeof(PRPA_IN201301UV02))]
+[XmlInclude(typeof(MCCI_IN000002UV01))]
 [XmlType(AnonymousType = true, Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
 [XmlRoot("Body", Namespace = "http://www.w3.org/2003/05/soap-envelope")]
 public class SoapBody
@@ -135,13 +141,13 @@ public class SoapBody
     /// ITI-44 request
     /// </summary>
     [XmlElement("PRPA_IN201301UV02", Namespace = Constants.Xds.Namespaces.Hl7V3)]
-    public PRPA_IN201301UV02_AddNewPatient? PRPA_IN201301UV02 { get; set; }
+    public PRPA_IN201301UV02? PRPA_IN201301UV02 { get; set; }
 
     /// <summary>
     /// ITI-44 response
     /// </summary>
     [XmlElement("MCCI_IN000002UV01", Namespace = Constants.Xds.Namespaces.Hl7V3)]
-    public MCCI_IN000002UV01_Acknowledgement? MCCI_IN000002UV01 { get; set; }
+    public MCCI_IN000002UV01? MCCI_IN000002UV01 { get; set; }
 
     [XmlElement(Namespace = Constants.Soap.Namespaces.SoapEnvelope)]
     public Fault? Fault { get; set; }

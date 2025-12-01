@@ -1,6 +1,7 @@
 ﻿
 using System.Xml.Serialization;
 using XcaInteropService.Commons.Commons;
+using XcaInteropService.Commons.Models.ClinicalDocument;
 using XcaInteropService.Commons.Models.ClinicalDocument.Types;
 
 namespace XcaInteropService.Commons.Models.Hl7.CommunicationFunctions;
@@ -29,6 +30,9 @@ public class CFDevice
 
     [XmlElement("manufacturerModelName")]
     public SC? ManufacturerModelName { get; set; }
+
+    [XmlElement("asAgent")]
+    public CFAsAgent? AsAgent {get;set;}
 
     [XmlElement("softwareName")]
     public SC? SoftwareName { get; set; }
