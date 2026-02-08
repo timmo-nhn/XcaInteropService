@@ -2,6 +2,7 @@
 using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Models.Soap.XdsTypes;
 using XcaInteropService.Source.Services;
+using static XcaInteropService.Commons.Commons.Constants.Svcm;
 
 namespace XcaInteropService.WebService.Services;
 
@@ -55,7 +56,8 @@ public class ValueSetRepositoryService
         return _valueSets;
     }
 
-    public RestfulApiResponse UploadSingleConcept(string oid, string language, string code, string codeSystem, string displayName)
+
+    public RestfulApiResponse UploadSingleConcept(string id, string language, string code, string? codeSystem, string? displayName)
     {
         var response = new RestfulApiResponse();
 
@@ -66,30 +68,40 @@ public class ValueSetRepositoryService
             DisplayName = displayName
         };
 
-        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == oid && vs.Language == language);
+        var valueSet = _valueSets.FirstOrDefault(vs => vs.Id == id && vs.Language == language);
+
+        if (ConceptExistsInValueSet(valueSet, concept))
+        {
+            var responseMessage = $"Value already exists in ValueSet: '{id}-{language}'\n\tCode: {code}\n\tCodeSystem: {codeSystem}\n\tDisplay: {displayName}";
+            _logger.LogWarning(responseMessage);
+            response.SetMessage(responseMessage);
+            return response;
+        }
 
         if (valueSet == null || valueSet.Language != language)
         {
-            _logger.LogInformation($"Adding new ValueSet {oid} - {language}");
-            response.SetMessage($"Added new ValueSet {oid} - {language}");
+            var responseMessage = $"Adding new ValueSet: '{id}-{language}'";
+            _logger.LogInformation(responseMessage);
+            response.SetMessage(responseMessage);
 
             valueSet = new()
             {
-                Id = oid,
+                Id = id,
                 Language = language
             };
         }
         else
         {
-            _logger.LogInformation($"Adding value to existing ValueSet {oid} - {language}");
-            response.SetMessage($"Added value to existing ValueSet {oid} - {language}");
+            var responseMessage = $"Adding value to existing ValueSet: '{id}-{language}'\n\tCode: {code}\n\tCodeSystem: {codeSystem}\n\tDisplay: {displayName}";
+            _logger.LogInformation(responseMessage);
+            response.SetMessage(responseMessage);
         }
 
         valueSet.ConceptList ??= new();
-        valueSet.ConceptList.lang ??= language;
+        valueSet.ConceptList.Lang ??= language;
         valueSet.ConceptList.Concept = [.. valueSet.ConceptList.Concept ?? [], concept];
 
-        _valueSetRepositoryWrapper.WriteValueSet(oid, language, valueSet);
+        _valueSetRepositoryWrapper.WriteValueSet(id, language, valueSet);
 
         _valueSets = _valueSetRepositoryWrapper.ReadAllValueSets();
 
@@ -225,5 +237,15 @@ public class ValueSetRepositoryService
     public RestfulApiResponse DeletValueSet(string oid, string language)
     {
         throw new NotImplementedException();
+    }
+
+    private bool ConceptExistsInValueSet(ValueSetType? valueSet, ConceptType concept)
+    {
+        return valueSet?.ConceptList?.Concept?.Any(cncpt => cncpt.Code == concept.Code && cncpt.CodeSystemName == concept.CodeSystemName && cncpt.DisplayName == concept.DisplayName) ?? false;
+    }
+
+    private bool ValueExistsInValueSet(ValueSetType valueSet, string code, string codeSystem, string displayName)
+    {
+        return valueSet?.ConceptList?.Concept?.Any(cncpt => cncpt.Code == code && cncpt.CodeSystemName == codeSystem && cncpt.DisplayName == displayName) ?? false;
     }
 }

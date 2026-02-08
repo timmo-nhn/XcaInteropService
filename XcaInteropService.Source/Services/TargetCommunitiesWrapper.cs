@@ -9,6 +9,7 @@ namespace XcaInteropService.Source.Services;
 public class TargetCommunitiesWrapper
 {
     private readonly ILogger<TargetCommunitiesWrapper> _logger;
+    private readonly FileSystemWatcher _watcher;
 
     internal string _domainConfigPath;
     internal string _domainConfigFile;
@@ -18,12 +19,32 @@ public class TargetCommunitiesWrapper
     {
         _logger = logger;
 
+        _watcher = new FileSystemWatcher(_domainConfigPath)
+        {
+            Filter = Path.GetFileName(_domainConfigFile),
+            NotifyFilter = NotifyFilters.LastWrite
+        };
+
         string baseDirectory = AppContext.BaseDirectory;
         _domainConfigPath = Path.Combine(baseDirectory, "..", "..", "..", "..", "XcaInteropService.Source", "Data", "DomainConfig");
         _domainConfigFile = Path.Combine(_domainConfigPath, "DomainConfig.yml");
         EnsureDomainConfigFileExists();
         ReadDomainConfigMap();
     }
+
+    private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
+    {
+        try
+        {
+            _logger.LogInformation($"Domain config map was reloaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reloading domain config.");
+        }
+    }
+
+
 
     public string GetDomainConfigPath()
     {
@@ -52,9 +73,9 @@ public class TargetCommunitiesWrapper
 
                 var sb = new StringBuilder();
 
-                if (!string.IsNullOrWhiteSpace(domain.DomainOid) && Regex.IsMatch(domain.DomainOid, @"^[\d\.]+$") == false)
+                if (!string.IsNullOrWhiteSpace(domain.HomeCommunityId) && Regex.IsMatch(domain.HomeCommunityId, @"^[\d\.]+$") == false)
                 {
-                    sb.AppendLine($"Domain Config DomainOid contains a malformed OID\n\tValue: {domain.DomainOid}");
+                    sb.AppendLine($"Domain Config DomainOid contains a malformed OID\n\tValue: {domain.HomeCommunityId}");
                 }
 
                 if (!string.IsNullOrWhiteSpace(domain.PatientAssigningAuthority) && Regex.IsMatch(domain.PatientAssigningAuthority, @"^[\d\.]+$") == false)
@@ -69,7 +90,7 @@ public class TargetCommunitiesWrapper
 
                 if (domain.PatientResolverType == Commons.Enums.PatientResolverType.PIX && string.IsNullOrWhiteSpace(domain.PatientAssigningAuthority))
                 {
-                    domain.PatientAssigningAuthority = domain.DomainOid;
+                    domain.PatientAssigningAuthority = domain.HomeCommunityId;
                 }
             });
 

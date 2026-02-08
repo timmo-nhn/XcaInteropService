@@ -1,5 +1,24 @@
 namespace XcaInteropService.Commons.Commons;
 
+public enum PatientIdentifierType
+{
+    /// <summary>
+    /// Global Patient Identifier
+    /// </summary>
+    GPI,
+
+    /// <summary>
+    /// Local Patient Identifier
+    /// </summary>
+    LPI,
+
+    /// <summary>
+    /// Social Security Number
+    /// </summary>
+    SSN,
+
+}
+
 public enum XacmlVersion
 {
     Version20,

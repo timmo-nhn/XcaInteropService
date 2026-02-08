@@ -9,7 +9,7 @@ namespace XcaInteropService.Commons.Extensions;
 
 /// <summary>
 /// Extension-methods for filtering data based on search parameters specified in ITI-18 Registry Stored Query
-/// Works with types in XcaXds.Commons.Models.Soap.XdsTypes 
+/// Works with types in XcaInteropService.Commons.Models.Soap.XdsTypes 
 /// Documentation on format and optionality: https://profiles.ihe.net/ITI/TF/Volume2/ITI-18.html#3.18.4.1.2.3.7
 /// 
 /// -- Numbered Parameter Names --

@@ -1,5 +1,4 @@
 ﻿using XcaInteropService.Commons.Models.Hl7.V3;
-using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Services;
 using XcaInteropService.Source.Services;
 
@@ -16,13 +15,13 @@ public class PatientDemographicsService
         _patientDemographicsWrapper = patientDemographicsWrapper;
     }
 
-    public MCCI_IN000002UV01 UploadPatientIdentity(SoapEnvelope soapEnvelope)
+    public MCCI_IN000002UV01? UploadPatientIdentity(PRPA_IN201301UV02? addPatientRequest)
     {
-        var addPatientRequest = soapEnvelope.Body.PRPA_IN201301UV02;
+        if (addPatientRequest == null) return null;
 
         var patientDto = PatientIdentityTransformerService.TransformAddPatientToPatientDto(addPatientRequest);
 
-        _patientDemographicsWrapper.UpdatePatientDemographics([patientDto]);
+        _patientDemographicsWrapper.UpdatePatientDemographics(patientDto);
 
         return new MCCI_IN000002UV01()
         {

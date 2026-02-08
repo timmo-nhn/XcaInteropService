@@ -1,0 +1,6 @@
+<ValueSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en" id="oid_sources">
+  <ConceptList xml:lang="en" xmlns="urn:ihe:iti:svs:2008">
+    <Concept code="2.16.578.1.12.4.1.4.1" displayName="Folkeregisterert (FNR)" />
+    <Concept code="2.16.578.1.12.4.5.100.1" displayName="XcaDS Test" />
+  </ConceptList>
+</ValueSet>

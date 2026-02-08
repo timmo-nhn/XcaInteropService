@@ -52,6 +52,16 @@ public static class Constants
         };
     }
 
+    public static class Svcm
+    {
+        public static class Languages
+        {
+            public const string English = "en";
+            public const string NorwegianBokmal = "no-nb";
+            public const string NorwegianNynorsk = "no-nn";
+        }
+    }
+
     public static class Soap
     {
         public static class Addresses
@@ -82,6 +92,16 @@ public static class Constants
 
     public static class Xds
     {
+        public static class Pix
+        {
+            public static class IdentifierTypes
+            {
+                public const string GPI = "GPI";
+                public const string LPI = "LPI";
+                public const string SSN = "SSN";
+            }
+        }
+
         public static class Namespaces
         {
             public const string Xdsb = "urn:ihe:iti:xds-b:2007";
@@ -97,6 +117,8 @@ public static class Constants
 
         public static class OperationContract
         {
+            public const string Oid = "1.3.6.1.4.1.19376.1.2";
+
             public const string Iti18Action = "urn:ihe:iti:2007:RegistryStoredQuery";
             public const string Iti18ActionAsync = "urn:ihe:iti:2007:RegistryStoredQueryAsync";
             public const string Iti18Reply = "urn:ihe:iti:2007:RegistryStoredQueryResponse";
@@ -528,6 +550,9 @@ public static class Constants
 
     public static class Oid
     {
+        // The correct "system"-value for OID
+        public const string System = "urn:ietf:rfc:3986";
+
         public const string Fnr = "2.16.578.1.12.4.1.4.1";
         public const string Dnr = "2.16.578.1.12.4.1.4.2";
         public const string Hnr = "2.16.578.1.12.4.1.4.3";

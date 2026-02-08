@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using XcaInteropService.Commons.Models.Custom.PatientIdentityDtos;
-using XcaInteropService.Source.Models.DatabaseDtos;
-using XcaXds.Source.Source;
+using XcaInteropService.Source.Source;
 
 namespace XcaInteropService.Source.Services;
 
@@ -31,13 +30,18 @@ public class PatientDemographicsWrapper
         context.Database.EnsureCreated();
     }
 
-    public IEnumerable<PatientIdentityDto?> ReadPatientDemographics()
+    public IEnumerable<PatientIdentityDto?> GetPatientDemographics()
     {
         using var db = _contextFactory.CreateDbContext();
         foreach (var entity in db.PatientIdentityList.AsNoTracking())
         {
             yield return DatabaseMapper.MapFromDatabaseEntityToDto(entity);
         }
+    }
+
+    public bool UpdatePatientDemographics(PatientIdentityDto? dto)
+    {
+        return UpdatePatientDemographics([dto]);
     }
 
     public bool UpdatePatientDemographics(List<PatientIdentityDto?>? dtos)

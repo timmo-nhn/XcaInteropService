@@ -1,4 +1,4 @@
-﻿using XcaXds.Source.Models.DatabaseDtos.Types;
+﻿using XcaInteropService.Source.Models.DatabaseDtos.Types;
 
 namespace XcaInteropService.Source.Models.DatabaseDtos;
 

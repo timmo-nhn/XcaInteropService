@@ -1,14 +1,12 @@
-using Hl7.Fhir.Model.CdsHooks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.FeatureManagement;
 using System.Collections;
 using XcaInteropService.Commons.Models.Custom;
-using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Source.Services;
+using XcaInteropService.Source.Source;
 using XcaInteropService.WebService.Middleware;
 using XcaInteropService.WebService.Services;
 using XcaInteropService.WebService.Startup;
-using XcaXds.Source.Source;
 
 namespace XcaInteropService.WebService;
 
@@ -35,7 +33,6 @@ public class Program
             var xdsConfigEnvVars = envVars.Where(n => n.Key.StartsWith("XdsConfiguration")).ToList();
             applicationConfig = ConfigBinder.BindKeyValueEnvironmentVariablesToXdsConfiguration(xdsConfigEnvVars);
 
-            builder.Configuration.Bind(applicationConfig);
             Environment.SetEnvironmentVariable("TMP", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable("TEMP", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
             Environment.SetEnvironmentVariable("TMPDIR", @"/mnt/data/tmp", EnvironmentVariableTarget.Process);
@@ -44,8 +41,10 @@ public class Program
         }
         else
         {
-            builder.Configuration.GetSection("XdsConfiguration").Bind(applicationConfig);
+            var section = builder.Configuration.GetSection("XdsConfiguration").AsEnumerable().ToDictionary(entry => (string)entry.Key.Replace(":","__"), entry => (string)entry.Value).ToList();
+            applicationConfig = ConfigBinder.BindKeyValueEnvironmentVariablesToXdsConfiguration(section);
         }
+        builder.Configuration.Bind(applicationConfig);
 
         builder.Services.AddSingleton(applicationConfig);
 
@@ -61,10 +60,14 @@ public class Program
         builder.Services.AddSingleton<TargetCommunitiesService>();
         builder.Services.AddSingleton<TargetCommunitiesWrapper>();
         builder.Services.AddSingleton<InitiatingGatewayService>();
+        builder.Services.AddSingleton<PatientResolverService>();
         builder.Services.AddSingleton<PatientDemographicsService>();
         builder.Services.AddSingleton<PatientDemographicsWrapper>();
         builder.Services.AddSingleton<ValueSetRepositoryService>();
         builder.Services.AddSingleton<ValueSetRepositoryWrapper>();
+        builder.Services.AddSingleton<MonitoringStatusService>();
+
+        builder.Services.AddHostedService<AppStartupService>();
 
         builder.Services.AddHttpClient();
 
@@ -72,7 +75,7 @@ public class Program
         builder.Services.AddDbContextFactory<SqliteRegistryDbContext>(options =>
             options.UseSqlite($"Data Source=\"{DatabasePathFinder.FindDatabasePath()}\""));
 
-        // Feature Toggle (located in XcaXds.WebService/appsettings.json)
+        // Feature Toggle (located in XcaInteropService.WebService/appsettings.json)
         builder.Services.AddFeatureManagement();
 
         var app = builder.Build();
@@ -81,11 +84,12 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(ui => 
+            app.UseSwaggerUI(ui =>
             {
                 //ui.EnableTryItOutByDefault();
             });
         }
+
 
         // Log thread and traceid and other stuff
         //app.UseMiddleware<ThreadLoggingScopeMiddleware>();

@@ -1,4 +1,4 @@
-﻿namespace XcaXds.Source.Models.DatabaseDtos.Types;
+﻿namespace XcaInteropService.Source.Models.DatabaseDtos.Types;
 
 public class DbCodedIdentifier
 {

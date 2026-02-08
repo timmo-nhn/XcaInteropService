@@ -2,6 +2,7 @@
 using XcaInteropService.Commons.Extensions;
 using XcaInteropService.Commons.Models.Custom;
 using XcaInteropService.Commons.Models.Custom.RestfulRegistry;
+using XcaInteropService.WebService.Services;
 
 namespace XcaInteropService.WebService.Controllers;
 
@@ -19,7 +20,7 @@ public class DomainConfigController : Controller
     [HttpGet("get-domain-config")]
     public IActionResult GetDomainConfig(string oid)
     {
-        var domain = _targetCommunitiesService.GetDomainConfigMap().Domains.FirstOrDefault(domain => domain.DomainOid == oid);
+        var domain = _targetCommunitiesService.GetDomainConfigMap().Domains.FirstOrDefault(domain => domain.HomeCommunityId == oid);
         return Ok(domain);
     }
 
@@ -49,7 +50,7 @@ public class DomainConfigController : Controller
 
         if (response.Success)
         {
-            response.SetMessage($"Added domain config {domainConfig.DomainOid}");
+            response.SetMessage($"Added domain config {domainConfig.HomeCommunityId}");
             return Ok(response);
         }
 

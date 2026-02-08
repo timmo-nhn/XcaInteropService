@@ -2,10 +2,5 @@
 
 public class DomainConfigMap
 {
-    public DomainConfigMap()
-    {
-        Domains ??= new();
-    }
-
-    public List<DomainConfig> Domains { get; set; }
+    public List<DomainConfig> Domains { get; set; } = [];
 }

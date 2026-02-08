@@ -37,7 +37,7 @@ public class PatientDemographicsController : Controller
         switch (action)
         {
             case Constants.Xds.OperationContract.Iti44Action:
-               var addPatientResponse = _patientDemographicsService.UploadPatientIdentity(soapEnvelope);
+               var addPatientResponse = _patientDemographicsService.UploadPatientIdentity(soapEnvelope.Body.PRPA_IN201301UV02);
 
                 responseEnvelope.SetAction(Constants.Xds.OperationContract.Iti44Reply);
                 responseEnvelope.Header.RelatesTo = soapEnvelope.Header.MessageId;

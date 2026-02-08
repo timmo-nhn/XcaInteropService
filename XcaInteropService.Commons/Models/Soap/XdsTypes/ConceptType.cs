@@ -10,13 +10,13 @@ public class ConceptType
 {
     [JsonPropertyName("code")]
     [XmlAttribute(AttributeName = "code")]
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     [JsonPropertyName("codeSystem")]
     [XmlAttribute(AttributeName = "codeSystemName")]
-    public string CodeSystemName { get; set; }
+    public string? CodeSystemName { get; set; }
 
     [JsonPropertyName("displayName")]
     [XmlAttribute(AttributeName = "displayName")]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 }

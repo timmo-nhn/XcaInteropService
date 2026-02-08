@@ -13,9 +13,9 @@ public static  class DomainConfigExtensions
     {
         var conflicting = new List<string>();
 
-        if (domainConfigMap.Domains.Any(dom => !string.IsNullOrWhiteSpace(dom.DomainOid) && dom.DomainOid == domainConfig.DomainOid))
+        if (domainConfigMap.Domains.Any(dom => !string.IsNullOrWhiteSpace(dom.HomeCommunityId) && dom.HomeCommunityId == domainConfig.HomeCommunityId))
         {
-            conflicting.Add($"OID: {domainConfig.DomainOid}");
+            conflicting.Add($"OID: {domainConfig.HomeCommunityId}");
         }
 
         if (domainConfigMap.Domains.Any(dom => !string.IsNullOrWhiteSpace(dom.QueryUrl) && dom.QueryUrl == domainConfig.QueryUrl))

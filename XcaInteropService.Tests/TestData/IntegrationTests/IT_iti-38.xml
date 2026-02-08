@@ -1,0 +1,30 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+    xmlns:a="http://www.w3.org/2005/08/addressing"
+    xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">urn:ihe:iti:2007:CrossGatewayQuery</a:Action>
+        <a:MessageID>urn:uuid:c6fda90e-a5ec-4f8d-aa1b-14802f4bf68d</a:MessageID>
+        <a:ReplyTo>
+            <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>
+        </a:ReplyTo>
+        <a:To s:mustUnderstand="1">https://ttr1xds-reg01.test.drift.nhn.no/xca/xca-iti18</a:To>
+    </s:Header>
+    <s:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <AdhocQueryRequest xmlns="urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0">
+            <ResponseOption returnType="LeafClass" returnComposedObjects="true" />
+            <AdhocQuery xmlns="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" id="urn:uuid:14d4debf-8f97-4251-9a74-a90016b0af0d">
+                <Slot name="$XDSDocumentEntryPatientId">
+                    <ValueList>
+                        <Value>'13116900216^^^&amp;2.16.578.1.12.4.1.4.1&amp;ISO'</Value>
+                    </ValueList>
+                </Slot>
+                <Slot name="$XDSDocumentEntryStatus">
+                    <ValueList>
+                        <Value>('urn:oasis:names:tc:ebxml-regrep:StatusType:Approved')</Value>
+                    </ValueList>
+                </Slot>
+            </AdhocQuery>
+        </AdhocQueryRequest>
+    </s:Body>
+</s:Envelope>

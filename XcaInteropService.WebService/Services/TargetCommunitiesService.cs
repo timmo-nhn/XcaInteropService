@@ -1,113 +1,69 @@
-﻿using XcaInteropService.Source.Services;
+﻿using XcaInteropService.Commons.Models.Custom;
+using XcaInteropService.Source.Services;
 
-namespace XcaInteropService.Commons.Models.Custom;
+namespace XcaInteropService.WebService.Services;
 
 public class TargetCommunitiesService
 {
     private readonly ILogger<TargetCommunitiesService> _logger;
     private readonly TargetCommunitiesWrapper _targetCommunitiesWrapper;
-    private readonly FileSystemWatcher _watcher;
-    private DomainConfigMap _domainConfig;
-    private readonly string _domainConfigPath;
-    private readonly string _domainConfigFile;
 
     public TargetCommunitiesService(ILogger<TargetCommunitiesService> logger, TargetCommunitiesWrapper targetCommunitiesWrapper)
     {
         _logger = logger;
         _targetCommunitiesWrapper = targetCommunitiesWrapper;
-
-        RefreshDomainConfig();
-        
-        _domainConfigPath = _targetCommunitiesWrapper.GetDomainConfigPath();
-        _domainConfigFile = _targetCommunitiesWrapper.GetDomainConfigFile();
-
-
-        _watcher = new FileSystemWatcher(_domainConfigPath)
-        {
-            Filter = Path.GetFileName(_domainConfigFile),
-            NotifyFilter = NotifyFilters.LastWrite
-        };
-
-        _watcher.Changed += OnConfigFileChanged;
-        _watcher.EnableRaisingEvents = true;
-    }
-
-    private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
-    {
-        try
-        {
-            RefreshDomainConfig();
-            _logger.LogInformation($"{Path.GetFileName(_domainConfigFile)} reloaded successfully.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error reloading domain config.");
-        }
     }
 
     public DomainConfigMap GetDomainConfigMap()
     {
-        return _domainConfig;
+        return _targetCommunitiesWrapper.ReadDomainConfigMap();
     }
 
     public bool UpdateDomainConfigMap(DomainConfig domainConfig)
     {
-        _domainConfig.Domains ??= new();
-        _domainConfig.Domains.Add(domainConfig);
 
-        var result = _targetCommunitiesWrapper.WriteConfigMap(_domainConfig);
+        var configMap = _targetCommunitiesWrapper.ReadDomainConfigMap();
 
-        if (result == true)
-        {
-            RefreshDomainConfig();
-            return true;
-        }
+        configMap.Domains.Add(domainConfig);
+
+        var result = _targetCommunitiesWrapper.WriteConfigMap(configMap);
         return result;
     }
 
     public bool RemoveDomainConfig(string oid)
     {
-        var idx = _domainConfig.Domains.FindIndex(dom => dom.DomainOid == oid);
+        var configMap = _targetCommunitiesWrapper.ReadDomainConfigMap();
+
+        var idx = configMap.Domains.FindIndex(dom => dom.HomeCommunityId == oid);
 
         if (idx == -1) return false;
-        
-        _domainConfig.Domains.RemoveAt(idx);
 
-        var result = _targetCommunitiesWrapper.WriteConfigMap(_domainConfig);
+        configMap.Domains.RemoveAt(idx);
 
-        if (result == true)
-        {
-            RefreshDomainConfig();
-            return true;
-        }
+        var result = _targetCommunitiesWrapper.WriteConfigMap(configMap);
+
         return result;
     }
 
     public bool ToggleDomain(string oid, out bool? currentValue)
     {
-        var theDomain = _domainConfig.Domains.FirstOrDefault(dom => dom.DomainOid == oid);
-        
-        
+        var configMap = _targetCommunitiesWrapper.ReadDomainConfigMap();
+
+        var theDomain = configMap.Domains.FirstOrDefault(dom => dom.HomeCommunityId == oid);
+
+
         if (theDomain == null)
-    {
+        {
             currentValue = null;
             return false;
         }
 
         theDomain.Enabled = !theDomain.Enabled;
-        
-        currentValue = theDomain.Enabled;
-        
-        var result = _targetCommunitiesWrapper.WriteConfigMap(_domainConfig);
 
-        if (result)
-            RefreshDomainConfig();
+        currentValue = theDomain.Enabled;
+
+        var result = _targetCommunitiesWrapper.WriteConfigMap(configMap);
 
         return result;
-    }
-
-    private void RefreshDomainConfig()
-    {
-        _domainConfig = _targetCommunitiesWrapper.ReadDomainConfigMap();
     }
 }

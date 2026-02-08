@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XcaInteropService.Source.Models.DatabaseDtos;
 
-namespace XcaXds.Source.Source;
+namespace XcaInteropService.Source.Source;
 
 public class SqliteRegistryDbContext : DbContext
 {

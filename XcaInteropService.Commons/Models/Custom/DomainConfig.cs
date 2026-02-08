@@ -6,7 +6,7 @@ public class DomainConfig
 {
     public string? FriendlyName { get; set; }
     public string PatientAssigningAuthority { get; set; }
-    public string DomainOid { get; set; }
+    public string HomeCommunityId { get; set; }
     public bool Async { get; set; } = false;
     public bool Enabled { get; set; } = true;
     public DomainReturn Return {  get; set; }

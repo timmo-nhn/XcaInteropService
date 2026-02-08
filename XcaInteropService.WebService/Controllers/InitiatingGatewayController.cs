@@ -3,10 +3,12 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using XcaInteropService.Commons.Commons;
+using XcaInteropService.Commons.Enums;
 using XcaInteropService.Commons.Extensions;
 using XcaInteropService.Commons.Models.Custom;
 using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Serializers;
+using XcaInteropService.Source.Services;
 using XcaInteropService.WebService.Services;
 
 namespace XcaInteropService.WebService.Controllers;
@@ -18,12 +20,21 @@ public class InitiatingGatewayController : ControllerBase
     private readonly ILogger<InitiatingGatewayController> _logger;
     private readonly TargetCommunitiesService _targetCommunitiesService;
     private readonly InitiatingGatewayService _initiatingGatewayService;
+    private readonly PatientDemographicsWrapper _patientDemographicsService;
+    private readonly PatientResolverService _patientResolverService;
 
-    public InitiatingGatewayController(ILogger<InitiatingGatewayController> logger, TargetCommunitiesService targetCommunitiesService, InitiatingGatewayService initiatingGatewayService)
+    public InitiatingGatewayController(
+        ILogger<InitiatingGatewayController> logger,
+        TargetCommunitiesService targetCommunitiesService,
+        InitiatingGatewayService initiatingGatewayService,
+        PatientDemographicsWrapper patientDemographicsService,
+        PatientResolverService patientResolverService)
     {
         _logger = logger;
         _targetCommunitiesService = targetCommunitiesService;
         _initiatingGatewayService = initiatingGatewayService;
+        _patientDemographicsService = patientDemographicsService;
+        _patientResolverService = patientResolverService;
     }
 
     [Consumes("application/soap+xml", "application/xml", "multipart/related", "application/xop+xml")]
@@ -53,29 +64,35 @@ public class InitiatingGatewayController : ControllerBase
             case Constants.Xds.OperationContract.Iti18Action:
             case Constants.Xds.OperationContract.Iti38Action:
 
-                if (soapEnvelope.Header.Action == Constants.Xds.OperationContract.Iti18Action)
-                {
-                    soapEnvelope.Header.Action = Constants.Xds.OperationContract.Iti38Action;
-                }
+                soapEnvelope.Header.Action = Constants.Xds.OperationContract.Iti38Action;
 
                 var runningTasks = new List<Task<HttpResponseMessage>>();
                 var relevantDomains = new DomainConfigMap();
+                var patientDemographics = _patientDemographicsService.GetPatientDemographics();
+                
+                var patientIdentityRegistry = _patientResolverService.GetPatientAssigningAuthorities(domainConfigMap, soapEnvelope);
 
                 foreach (var targetCommunity in domainConfigMap.Domains)
                 {
                     if (!targetCommunity.Enabled) continue;
 
+                    if (targetCommunity.PatientResolverType == PatientResolverType.PIX)
+                    {
+                        _patientResolverService.ResolvePatientForTargetCommunity(targetCommunity, patientDemographics);
+                    }
+
                     relevantDomains.Domains.Add(targetCommunity);
-                    runningTasks.Add(_initiatingGatewayService.CrossGatewayQueryFromTargetCommunity(soapEnvelope, targetCommunity));
+                    runningTasks.Add(_initiatingGatewayService.CrossGatewayQueryToTargetCommunity(soapEnvelope, targetCommunity));
                 }
 
+                // Fire off all http requests asynchonously
                 var results = await Task.WhenAll(runningTasks);
 
                 // Domains which will receive a HTTP request
-                var queriedDomains = relevantDomains.Domains.Where(rd => rd.Enabled && rd.Return == Commons.Enums.DomainReturn.DocumentList).ToList();
+                var queriedDomains = relevantDomains.Domains.Where(rd => rd.Enabled && rd.Return == DomainReturn.DocumentList).ToList();
 
                 // Domains which will NOT receive a HTTP request
-                var nonQueriedDomains = relevantDomains.Domains.Where(rd => rd.Return != Commons.Enums.DomainReturn.DocumentList).ToList();
+                var nonQueriedDomains = relevantDomains.Domains.Where(rd => rd.Return != DomainReturn.DocumentList).ToList();
 
                 responseEnvelope = _initiatingGatewayService.ProcessNonQueriedDomains(responseEnvelope, nonQueriedDomains);
 

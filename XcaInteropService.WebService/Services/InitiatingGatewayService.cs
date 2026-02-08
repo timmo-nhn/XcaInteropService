@@ -22,20 +22,20 @@ public class InitiatingGatewayService
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<HttpResponseMessage> CrossGatewayQueryFromTargetCommunity(SoapEnvelope soapEnvelope, DomainConfig domainConfig)
+    public async Task<HttpResponseMessage> CrossGatewayQueryToTargetCommunity(SoapEnvelope soapEnvelope, DomainConfig domainConfig)
     {
         var stopWatch = Stopwatch.StartNew();
 
         var responseEnvelope = new SoapEnvelope();
-
+        var oldMessageID = soapEnvelope.Header.MessageId;
         var newMessageId = Guid.NewGuid().ToString();
 
-        _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Start calling Responding gateway {domainConfig.QueryUrl}");
+        _logger.LogInformation($"{oldMessageID} - Assigning message id {newMessageId} for {domainConfig.HomeCommunityId}");
 
-        _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Assigning message id {newMessageId} for {domainConfig.DomainOid}");
+        _logger.LogInformation($"{oldMessageID} - Start calling Responding gateway {domainConfig.QueryUrl}");
 
+        soapEnvelope.Header.MessageId = newMessageId.;
 
-        soapEnvelope.Header.MessageId = newMessageId;
 
         var sxmls = new SoapXmlSerializer();
         var soapXml = sxmls.SerializeToXmlString(soapEnvelope, Constants.XmlDefaultOptions.DefaultXmlWriterSettingsInline).Content;
@@ -51,7 +51,7 @@ public class InitiatingGatewayService
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, $"{soapEnvelope.Header.MessageId} - Error calling {domainConfig.QueryUrl}: {ex.Message}");
+            _logger.LogError(ex, $"{oldMessageID} - Error calling {domainConfig.QueryUrl}: {ex.Message}");
 
             // Return a synthetic HTTP response to keep the pipeline consistent
             var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
@@ -65,7 +65,7 @@ public class InitiatingGatewayService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"{soapEnvelope.Header.MessageId} - Unexpected error calling {domainConfig.QueryUrl}");
+            _logger.LogError(ex, $"{oldMessageID} - Unexpected error calling {domainConfig.QueryUrl}");
 
             var errorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
             {
@@ -78,7 +78,7 @@ public class InitiatingGatewayService
         }
 
         stopWatch.Stop();
-        _logger.LogInformation($"{soapEnvelope.Header.MessageId} - Request Complete!\n\tAction: {soapEnvelope.Header.Action}\n\tLocation: {domainConfig.DomainOid}\n\tEndpoint: {domainConfig.QueryUrl}\n\tElapsed: {stopWatch.ElapsedMilliseconds}ms");
+        _logger.LogInformation($"{oldMessageID} - Request Complete!\n\tAction: {soapEnvelope.Header.Action}\n\tLocation: {domainConfig.HomeCommunityId}\n\tEndpoint: {domainConfig.QueryUrl}\n\tElapsed: {stopWatch.ElapsedMilliseconds}ms");
 
         return response;
     }
@@ -103,14 +103,14 @@ public class InitiatingGatewayService
 
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation($"{sessionId} - Response retrieved from Responding Gateway \n\tEndpoint: {response.RequestMessage?.RequestUri}\n\tLocation: {domain.DomainOid}");
+                _logger.LogInformation($"{sessionId} - Response retrieved from Responding Gateway \n\tEndpoint: {response.RequestMessage?.RequestUri}\n\tLocation: {domain.HomeCommunityId}");
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var communitySoapEnvelope = sxmls.DeserializeXmlString<SoapEnvelope>(responseBody);
 
                 var registryObjects = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryObjectList;
                 var registryErrors = communitySoapEnvelope.Body.AdhocQueryResponse?.RegistryErrorList?.RegistryError;
 
-                _logger.LogInformation($"{sessionId} - Retrieved \n\tXDSEntries: {registryObjects?.Length ?? 0}\n\tLocation: {domain.DomainOid}");
+                _logger.LogInformation($"{sessionId} - Retrieved \n\tXDSEntries: {registryObjects?.Length ?? 0}\n\tLocation: {domain.HomeCommunityId}");
 
                 responseEnvelope.Body.AdhocQueryResponse ??= new();
                 responseEnvelope.Body.AdhocQueryResponse.RegistryErrorList ??= new();
@@ -131,7 +131,7 @@ public class InitiatingGatewayService
                 _logger.LogWarning($"{sessionId} - {await response.Content.ReadAsStringAsync()}");
 
                 responseEnvelope.Body.RegistryResponse ??= new();
-                responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.DomainOid}", domain.DomainOid);
+                responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.HomeCommunityId}", domain.HomeCommunityId);
             }
         }
 
@@ -170,7 +170,7 @@ public class InitiatingGatewayService
 
         foreach (var documentRequest in documentRequests ?? [])
         {
-            var domain = domainConfigMap.Domains.FirstOrDefault(dom => dom.DomainOid == documentRequest.HomeCommunityId);
+            var domain = domainConfigMap.Domains.FirstOrDefault(dom => dom.HomeCommunityId == documentRequest.HomeCommunityId);
 
             if (domain == null)
             {
@@ -216,7 +216,7 @@ public class InitiatingGatewayService
                 _logger.LogWarning($"{sessionId} - Gateway {response.RequestMessage?.RequestUri} failed with HTTP status {response.StatusCode}");
 
                 responseEnvelope.Body.RegistryResponse ??= new();
-                responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.DomainOid}", domain.DomainOid);
+                responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.HomeCommunityId}", domain.HomeCommunityId);
                 continue;
             }
 
@@ -293,7 +293,7 @@ public class InitiatingGatewayService
                     break;
 
                 case Commons.Enums.DomainReturn.RegistryError:
-                    responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.DomainOid}", domain.DomainOid);
+                    responseEnvelope.Body.RegistryResponse.AddError(XdsErrorCodes.XDSUnavailableCommunity, $"Could not retrieve from target domain {domain.HomeCommunityId}", domain.HomeCommunityId);
                     break;
 
                 default:

@@ -2,7 +2,7 @@
 using XcaInteropService.Commons.Models.Custom.PatientIdentityDtos;
 using XcaInteropService.Commons.Models.Hl7.DataType;
 using XcaInteropService.Source.Models.DatabaseDtos;
-using XcaXds.Source.Models.DatabaseDtos.Types;
+using XcaInteropService.Source.Models.DatabaseDtos.Types;
 
 namespace XcaInteropService.Source.Services;
 

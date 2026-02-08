@@ -5,24 +5,16 @@ using XcaInteropService.Commons.Commons;
 using XcaInteropService.Commons.Models.Soap;
 using XcaInteropService.Commons.Serializers;
 using XcaInteropService.Tests.Helpers;
+using XcaInteropService.WebService;
 using XcaInteropService.WebService.Services;
 
 namespace XcaInteropService.Tests;
 
 
-public class IntegrationTests_ValueSetService : IClassFixture<WebApplicationFactory<WebService.Program>>
+public class IntegrationTests_ValueSetService : IntegrationTests_DefaultFixture
 {
-    private readonly HttpClient _client;
-
-    private readonly ValueSetRepositoryService _valueSetRepositoryService;
-
-    public IntegrationTests_ValueSetService(WebApplicationFactory<WebService.Program> factory)
-    {
-        _client = factory.CreateClient();
-        using var scope = factory.Services.CreateScope();
-        _valueSetRepositoryService = scope.ServiceProvider.GetRequiredService<ValueSetRepositoryService>();
-    }
-
+    public IntegrationTests_ValueSetService(WebApplicationFactory<Program> factory) : base(factory) { }
+    
     [Fact]
     public async Task RetrieveValueSet()
     {
@@ -34,7 +26,7 @@ public class IntegrationTests_ValueSetService : IClassFixture<WebApplicationFact
 
         if (valueSets == null || valueSets.Count == 0)
         {
-            _valueSetRepositoryService.UploadSingleConcept("1.2.3.4", "en","123456-22","2.16.578.1.12.4.1.4.1.2.3","Test 123 æøåÆØÅ");
+            _valueSetRepositoryService.UploadSingleConcept("1.2.3.4", "en", "123456-22", "2.16.578.1.12.4.1.4.1.2.3", "Test 123 æøåÆØÅ");
         }
 
         valueSets = _valueSetRepositoryService.GetValueSetList();
@@ -50,18 +42,12 @@ public class IntegrationTests_ValueSetService : IClassFixture<WebApplicationFact
 
         var retrieveValueSetQuery = sxmls.SerializeToXmlString(valueSetRequestEnvelope).Content;
 
-        var httpResponse = await _client.PostAsync("/ValueSetRepository/services/ValueSetRepositoryService",
-            new StringContent(retrieveValueSetQuery, Encoding.UTF8, Constants.MimeTypes.SoapXml));
+        var httpResponse = await _client.PostAsync("/ValueSetRepository/services/ValueSetRepositoryService", new StringContent(retrieveValueSetQuery, Encoding.UTF8, Constants.MimeTypes.SoapXml));
 
         var body = await httpResponse.Content.ReadAsStringAsync();
+        Assert.NotEmpty(body);
 
-        if (string.IsNullOrWhiteSpace(body))
-        {
-            Assert.Fail("Body is not empty");
-        }
-        
         var soapEnvelope = sxmls.DeserializeXmlString<SoapEnvelope>(body);
-
         Assert.NotEmpty(soapEnvelope.Body?.RetrieveValueSetResponse?.ValueSet?.ConceptList?.Concept ?? []);
     }
 

@@ -1,18 +1,18 @@
 Domains:
 - FriendlyName: XcaDS Test
   PatientAssigningAuthority:
-  DomainOid: 2.16.578.1.12.4.5.100.1
+  HomeCommunityId: 2.16.578.1.12.4.5.100.1
   Async: false
   Enabled: true
   Return: DocumentList
-  PatientResolverType: IDENTITY
+  PatientResolverType: PIX
   QueryUrl: https://localhost:7176/XCA/services/RespondingGatewayService
   RetrieveUrl:
   RetrieveImagesUrl: 
 
 - FriendlyName: XcaDS Test
   PatientAssigningAuthority:
-  DomainOid: 2.16.578.1.12.4.5.101.1
+  HomeCommunityId: 2.16.578.1.12.4.5.101.1
   Async: false
   Enabled: true
   Return: DocumentList

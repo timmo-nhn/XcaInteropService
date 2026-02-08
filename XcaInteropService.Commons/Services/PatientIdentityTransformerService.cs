@@ -65,6 +65,7 @@ public static class PatientIdentityTransformerService
             IdNumber = pid.Extension,
             AssigningAuthority = new HD()
             {
+                //NamespaceId = 
                 UniversalId = pid.Root
             }
         }).ToList();

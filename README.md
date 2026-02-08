@@ -8,7 +8,7 @@ XcaInteropService (Xca Interoperability Service) is a web service implementation
 ## Solution Documentation
 
 ### [🌐 XCA Initiating Gateway](/Docs/XcaGateway.md)
-The domain config map used for querying other XCA Gateways.
+The XCA Initiating Gateway.
 
 ### [📝 Domain Config](/Docs/DomainConfig.md)
 The domain config map used for querying other XCA Gateways.

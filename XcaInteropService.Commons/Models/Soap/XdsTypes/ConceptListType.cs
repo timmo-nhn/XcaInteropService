@@ -12,9 +12,9 @@ public class ConceptListType
 {
     [JsonPropertyName("lang")]
     [XmlAttribute("lang", Form = XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/XML/1998/namespace")]
-    public string lang { get; set; }
+    public string? Lang { get; set; }
 
     [JsonPropertyName("concept")]
     [XmlElement(Order = 0)]
-    public ConceptType[] Concept { get; set; }
+    public ConceptType[]? Concept { get; set; }
 }
